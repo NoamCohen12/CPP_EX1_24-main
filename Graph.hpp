@@ -2,23 +2,30 @@
 #define GRAPH_HPP
 #include <iostream>
 #include <vector>
-#include <string>
+#define without_weights_edges 0
+#define positive_edges 1
+#define negative_edges 2
 using namespace std;
-namespace ariel{
-class Graph
-
+namespace ariel
 {
-private:
-    vector<vector<int>> matrix; // adjacency list
-    size_t v;                    // number of vertixs
-    bool isDirected;
+    class Graph
 
-public:
-    Graph( vector<vector<int>> matrix, size_t v, bool isDirected);
-    void loadGraph(vector<vector<int>> graph,bool isdirected);
-    void printGraph();
-    size_t getSize();
+    {
+    private:
+        vector<vector<int> > matrix; // adjacency list
+        size_t v;                    // number of vertixs
+        bool isDirected;
+        int type_graph;
 
-};
+    public:
+        Graph(vector<vector<int> > matrix, size_t v, bool isDirected);
+        void loadGraph(vector<vector<int> > graph);
+        void printGraph();
+        size_t getSize();
+        vector<vector<int> > get_matrix();
+        bool isDirectedG();
+        int graph_type(vector<vector<int> > graph);
+        int get_type_graph();
+    };
 }
 #endif
