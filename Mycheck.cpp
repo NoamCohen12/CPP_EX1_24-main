@@ -1,11 +1,9 @@
 #include <iostream>
 #include "Graph.hpp"
- #include "Algorithms.hpp"
+#include "Algorithms.hpp"
 // using ariel::Algorithms;
 
 using namespace ariel;
-
-#include <iostream>
 #include <stdexcept>
 #include <vector>
 using namespace std;
@@ -18,15 +16,13 @@ int main()
         {0, 1, 0},
         {1, 0, 1},
         {0, 1, 0}};
-    ariel::Graph g(graph, 3, false);
+    ariel::Graph g( false);
     g.loadGraph(graph); // Load the graph to the object.
     g.printGraph();     // Should print: "Graph with 3 vertices and 2 edges."
-    cout << Algorithms::isConnected(g) << endl;        // Should print: "0" (false).
     cout << Algorithms::shortestPath(g, 0, 2) << endl; // Should print: 0->1->2.
+    cout << Algorithms::isConnected(g) << endl; // Should print: true  1
 
-
-
-
+printf("*********************************************************************************************************\n");
 
     cout << "graph number 2"<<endl;
 
@@ -45,6 +41,8 @@ int main()
      cout << Algorithms::shortestPath(g, 0, 4) << endl; // Should print: "-1" (there is no path between 0 and 4).
 //     // cout << Algorithms::isContainsCycle(g) << endl;    // Should print: "The cycle is: 0->1->2->0".
 //     // cout << Algorithms::isBipartite(g) << endl;        // Should print: "0" (false).
+
+printf("*********************************************************************************************************\n");
 
 //     cout << "graph number 3"<<endl;
 
@@ -65,14 +63,18 @@ int main()
 //     {
 //         cout << e.what() << endl; // Should print: "Invalid graph: The graph is not a square matrix."
 //     }
-cout<<"graph number four"<<endl;
+printf("*********************************************************************************************************\n");
+
+cout<<"graph number 4"<<endl;
 vector<vector<int> > graph4 = {
-        {0, 4, 1},
+        {0, 4, 0},
         {4, 0, 1},
-        {1, 1, 0}};
+        {0, 1, 0}};
     g.loadGraph(graph4); // Load the graph to the object.
+    cout << Algorithms::isContainsCycle(g) << endl;//Should print: -1
     cout << Algorithms::shortestPath(g, 0, 2) << endl; // Should print: 0->1->2.
-cout<<"graph number five"<<endl;
+cout<<"graph number 5"<<endl;
+printf("*********************************************************************************************************\n");
 
  vector<vector<int>> graph5 = {
         {0, 4, 0, 0, 0},
@@ -84,6 +86,19 @@ cout<<"graph number five"<<endl;
     g.loadGraph(graph5); // Load the graph to the object.
 cout << Algorithms::shortestPath(g, 0, 4) << endl; // Should print: 0->1->2.
 
+
+printf("*********************************************************************************************************\n");
+
+cout<<"graph number 6"<<endl;
+vector<vector<int>> graph6 = {
+        {0, 1, 1, 0, 0},
+        {1, 0, 1, 0, 0},
+        {1, 1, 0, 1, 0},
+        {0, 0, 1, 0, 0},
+        {0, 0, 0, 0, 0}};
+         g.loadGraph(graph6);
+         cout << Algorithms::isContainsCycle(g)<< endl;
+printf("*********************************************************************************************************\n");
 
     return 0;
 }

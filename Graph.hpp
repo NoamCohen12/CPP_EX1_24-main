@@ -15,11 +15,11 @@ namespace ariel
         vector<vector<int> > matrix; // adjacency list
         size_t v;                    // number of vertixs
         bool isDirected;
-        int type_graph;
+        int type_graph;              
 
     public:
-        Graph(vector<vector<int> > matrix, size_t v, bool isDirected);
-        void loadGraph(vector<vector<int> > graph);
+        Graph( bool isDirected);
+        void loadGraph(vector<vector<int> > &graph);
         void printGraph();
         size_t getSize();
         vector<vector<int> > get_matrix();

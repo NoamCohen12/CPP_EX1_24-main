@@ -5,15 +5,12 @@
 #include <queue>
 #include <stack>
 #include <unordered_map>
-#include <algorithm> 
+#include <algorithm>
 #include <climits>
-
+#include <string>
+#include <sstream>
 
 #include "Graph.hpp"
-
-
-
-
 
 using namespace std;
 
@@ -29,17 +26,27 @@ namespace ariel
 
         static int bfs(vector<vector<int> > adj, int start);
 
-        static int find_path_bfs(Graph& g, int start, int end);
+        static string find_path_bfs(Graph &g, size_t start, size_t end);
 
-        static int dijkstra(Graph& matrix, int source, int target);
-         static int bellmanFord(Graph& g, int source, int target);
+        static int dijkstra(Graph &matrix, size_t source, size_t target);
 
+        static int bellmanFord(Graph &g, size_t source, size_t target);
+
+        static bool dfs_D_cycle_detection(size_t vertex, int parent, const vector<vector<int> > &graph, vector<bool> &visited, vector<int> &cycle);
+
+        static bool is_cycle_D(const vector<vector<int> > &graph);
+
+        static bool dfs_UD_cycle_detection(Graph &g, size_t v, vector<bool> &visited, vector<bool> &in_recursion_stack, vector<int> &path);
+
+        static bool is_cycle_UD(Graph &g);
+
+        static void print_cycle(vector<int> &cycle);
 
         static int isConnected(Graph g);
 
-        static int shortestPath(Graph g, int start, int end);
+        static string shortestPath(Graph g, size_t start, size_t end);
 
-        static int isContainsCycle(Graph g);
+        static bool isContainsCycle(Graph &g);
 
         static int isBipartite(Graph g);
 

@@ -2,10 +2,9 @@
 
 using namespace ariel;
 
-Graph::Graph(vector<vector<int> > matrix1, size_t v1, bool isDirected1)
+Graph::Graph(bool isDirected1)
 {
-    this->matrix = matrix1;
-    this->v = v1;
+    this->v = 0;
     this->isDirected = isDirected1;
     this->type_graph = 0;
 }
@@ -15,8 +14,11 @@ size_t Graph::getSize()
     return this->v;
 }
 
-void Graph::loadGraph(vector<vector<int> > graph)
+
+void Graph::loadGraph(vector<vector<int> > &graph)
 {
+    this->v = graph.size();
+    this->matrix = graph;
     if (graph.size() != graph[0].size() || graph.size() == 0)
     {
 
