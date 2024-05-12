@@ -9,7 +9,6 @@
 #include <climits>
 #include <string>
 #include <sstream>
-
 #include "Graph.hpp"
 
 using namespace std;
@@ -20,9 +19,9 @@ namespace ariel
     class Algorithms
     {
     public:
-        static vector<vector<int> > dfs_graph(Graph g);
+        static vector<bool> dfs_graph(Graph g);
 
-        static vector<vector<int> > dfs_Vertex(Graph &g, int root);
+        //static vector<vector<int> > dfs_Vertex(Graph &g, int root);
 
         static int bfs(vector<vector<int> > adj, int start);
 
@@ -30,7 +29,7 @@ namespace ariel
 
         static int dijkstra(Graph &matrix, size_t source, size_t target);
 
-        static int bellmanFord(Graph &g, size_t source, size_t target);
+        static int bellmanFord(Graph &g, size_t source, size_t target);//TODO UNDIRECTED
 
         static bool dfs_D_cycle_detection(size_t vertex, int parent, const vector<vector<int> > &graph, vector<bool> &visited, vector<int> &cycle);
 
@@ -48,9 +47,14 @@ namespace ariel
 
         static bool isContainsCycle(Graph &g);
 
-        static int isBipartite(Graph g);
+        static string Two_Color_Division(Graph &g) ;
 
-        static int negativeCycle(Graph g);
+        static string isBipartite(Graph &g);
+
+       static bool bellmanFord_negative_cycle(Graph &g);
+
+
+        static bool negativeCycle(Graph &g);
     };
 }
 #endif

@@ -1,19 +1,15 @@
 #include "Algorithms.hpp"
 using namespace ariel;
-vector<vector<int> > Algorithms::dfs_graph(Graph g)
+vector<bool> Algorithms::dfs_graph(Graph g)
 {
-    size_t num_nodes = g.get_matrix().size();
-    vector<bool> visited(num_nodes, false);
-
-    vector<vector<int> > trees;
+    size_t n = g.getSize(); // number of vertix
+    vector<bool> visited(n, false);
     vector<vector<int> > matrix = g.get_matrix();
-
-    for (size_t i = 0; i < num_nodes; i++)
+    stack<int> s;
+    for (size_t i = 0; i < n; i++)
     {
         if (!visited[i])
         {
-            stack<int> s;
-            vector<int> current_component;
             s.push(i);
             visited[i] = true;
 
@@ -21,60 +17,25 @@ vector<vector<int> > Algorithms::dfs_graph(Graph g)
             {
                 int current_node = s.top();
                 s.pop();
-                current_component.push_back(current_node);
 
-                for (int neighbor : matrix[(size_t)current_node])
+                for (size_t neighbor = 0; neighbor < g.get_matrix()[(size_t)current_node].size(); neighbor++)
                 {
-                    if (neighbor != 0 && !visited[(size_t)neighbor])
+                    if (g.get_matrix()[(size_t)current_node][neighbor] != 0 && !visited[neighbor])
                     {
                         s.push(neighbor);
-                        visited[(size_t)neighbor] = true;
+                        visited[neighbor] = true;
                     }
                 }
             }
-            trees.push_back(current_component);
         }
     }
-
-    return trees;
-}
-
-vector<vector<int> > Algorithms::dfs_Vertex(Graph &g, int root)
-{
-    size_t num_nodes = g.get_matrix().size();
-    vector<bool> visited(num_nodes, false);
-    vector<vector<int> > trees(num_nodes);
-    vector<vector<int> > matrix = g.get_matrix();
-
-    stack<int> s;
-    s.push(root);
-    visited[(size_t)root] = true;
-
-    while (!s.empty())
-    {
-        int current_node = s.top();
-        s.pop();
-
-        for (int neighbor : matrix[(size_t)current_node])
-        {
-            if (neighbor != 0 && !visited[(size_t)neighbor])
-            {
-                s.push(neighbor);
-                visited[(size_t)neighbor] = true;
-                trees[(size_t)current_node].push_back(neighbor);
-            }
-        }
-    }
-
-    return trees;
+    return visited;
 }
 
 int Algorithms::bfs(vector<vector<int> > adjacency_matrix, int start_node)
 {
     vector<bool> visited(adjacency_matrix.size(), false);
 
-
-    
     queue<int> queue;
 
     queue.push(start_node);
@@ -109,7 +70,7 @@ int Algorithms::bfs(vector<vector<int> > adjacency_matrix, int start_node)
 
 // in the case that graph is undirected we use DFS algoritem
 // we got many trees and we make DFS For the second time on the root of last tree
-// if we got one tree the graph isConcted
+// if we got one tree the graph isConnected
 
 int Algorithms::isConnected(Graph g)
 {
@@ -117,18 +78,25 @@ int Algorithms::isConnected(Graph g)
     {
         return bfs((g.get_matrix()), 0);
     }
+    size_t n = g.getSize();
+    vector<bool> visit_dfs1 = dfs_graph(g);
+    Graph GT = g.getTranspose();
+    // vector<bool> visit_dfs2 = dfs_graph(GT);
+    // for (size_t i = 0; i < n; i++)
+    // {
+    //     if (visit_dfs1[i] == false || visit_dfs2[i] == false)
+    //     {
+    //         return false;
+    //     }
+    // }
 
-    vector<vector<int> > trees_from_dfs = dfs_graph(g);
-    int last_root = trees_from_dfs.back().front();
-    vector<vector<int> > trees_from_secend_dfs = dfs_Vertex(g, last_root);
-
-    return (trees_from_secend_dfs.size() == 1);
+    return true;
 }
 
 // Function to find a path between start and end vertices using BFS and print the path
 string ariel::Algorithms::find_path_bfs(Graph &g, size_t start, size_t end)
 {
-    vector<vector<int>> matrix = g.get_matrix();
+    vector<vector<int> > matrix = g.get_matrix();
     unordered_map<int, int> parent_map;
     queue<int> q;
     q.push(start);
@@ -174,10 +142,9 @@ string ariel::Algorithms::find_path_bfs(Graph &g, size_t start, size_t end)
     return "-1"; // No path found
 }
 
-
 int Algorithms::dijkstra(Graph &g, size_t source, size_t target)
 {
-     size_t n = g.get_matrix().size();
+    size_t n = g.get_matrix().size();
     vector<int> dist(n, INT_MAX);
     vector<int> parent(n, -1);
     vector<bool> visited(n, false);
@@ -188,7 +155,7 @@ int Algorithms::dijkstra(Graph &g, size_t source, size_t target)
 
     while (!pq.empty())
     {
-        size_t u =(size_t)pq.top().second;
+        size_t u = (size_t)pq.top().second;
         pq.pop();
 
         if (visited[u])
@@ -299,22 +266,27 @@ int Algorithms::bellmanFord(Graph &g, size_t source, size_t target)
     return dist[target];
 }
 
-bool Algorithms::dfs_D_cycle_detection(size_t vertex, int parent, const vector<vector<int>>& graph, vector<bool>& visited, vector<int>& current_cycle)
+bool Algorithms::dfs_D_cycle_detection(size_t vertex, int parent, const vector<vector<int> > &graph, vector<bool> &visited, vector<int> &current_cycle)
 {
     visited[vertex] = true;
-    for (size_t neighbor = 0; neighbor < graph.size(); ++neighbor) {
-        if (graph[vertex][neighbor] > 0) { // Check if there is an edge between the vertices
-            if (!visited[neighbor]) {
+    for (size_t neighbor = 0; neighbor < graph.size(); ++neighbor)
+    {
+        if (graph[vertex][neighbor] > 0)
+        { // Check if there is an edge between the vertices
+            if (!visited[neighbor])
+            {
                 current_cycle.push_back(vertex); // Add current vertex to cycle
-                if (dfs_D_cycle_detection(neighbor, vertex, graph, visited, current_cycle)) {
+                if (dfs_D_cycle_detection(neighbor, vertex, graph, visited, current_cycle))
+                {
                     return true;
                 }
                 current_cycle.pop_back(); // Remove current vertex if no cycle found in subtree
-            } 
-            else if (neighbor != parent) {
-                current_cycle.push_back(vertex); // Add current vertex to cycle
+            }
+            else if (neighbor != parent)
+            {
+                current_cycle.push_back(vertex);   // Add current vertex to cycle
                 current_cycle.push_back(neighbor); // Add neighbor to cycle
-                return true; // Cycle detected
+                return true;                       // Cycle detected
             }
         }
     }
@@ -322,30 +294,36 @@ bool Algorithms::dfs_D_cycle_detection(size_t vertex, int parent, const vector<v
 }
 bool Algorithms::is_cycle_D(const vector<vector<int> > &graph)
 {
-     size_t n = graph.size();
+    size_t n = graph.size();
     vector<bool> visited(n, false);
 
-    for (size_t v = 0; v < n; ++v) {
-        if (!visited[v]) {
+    for (size_t v = 0; v < n; ++v)
+    {
+        if (!visited[v])
+        {
             vector<int> current_cycle;
-            if (dfs_D_cycle_detection(v, -1, graph, visited, current_cycle)) {
+            if (dfs_D_cycle_detection(v, -1, graph, visited, current_cycle))
+            {
                 cout << "Cycle found: ";
-               print_cycle(current_cycle);
-                //cout << current_cycle[0]; // Print the first vertex again to close the cycle
-                //cout << endl;
+                print_cycle(current_cycle);
+                // cout << current_cycle[0]; // Print the first vertex again to close the cycle
+                // cout << endl;
                 return true; // Cycle detected
             }
         }
     }
-   // cout << "No cycle found" << endl;
+    // cout << "No cycle found" << endl;
 
     return false; // No cycle found
 }
-void Algorithms::print_cycle(vector<int>& cycle) {
-    //cout << "Cycle found: ";
-    for (size_t i = 0; i < cycle.size() ; ++i) {
+void Algorithms::print_cycle(vector<int> &cycle)
+{
+    // cout << "Cycle found: ";
+    for (size_t i = 0; i < cycle.size(); ++i)
+    {
         cout << cycle[i];
-        if (i < cycle.size() - 1) {
+        if (i < cycle.size() - 1)
+        {
             cout << "->";
         }
     }
@@ -360,14 +338,12 @@ string Algorithms::shortestPath(Graph g, size_t start, size_t end)
     }
     if (start == end)
     {
-       return to_string(start);
-         
+        return to_string(start);
     }
     if (g.get_type_graph() == without_weights_edges)
     {
 
-       return find_path_bfs(g, start, end);
-        
+        return find_path_bfs(g, start, end);
     }
     else if (g.get_type_graph() == positive_edges)
     {
@@ -383,36 +359,47 @@ string Algorithms::shortestPath(Graph g, size_t start, size_t end)
     return "-1";
 }
 
-bool Algorithms::dfs_UD_cycle_detection(Graph& g, size_t v, vector<bool>& visited, vector<bool>& in_recursion_stack, vector<int>& path) {
+bool Algorithms::dfs_UD_cycle_detection(Graph &g, size_t v, vector<bool> &visited, vector<bool> &in_recursion_stack, vector<int> &path)
+{
     visited[v] = true;
     in_recursion_stack[v] = true;
     path.push_back(v);
 
-    for (size_t neighbor = 0; neighbor < g.get_matrix()[v].size(); ++neighbor) {
-        if (g.get_matrix()[v][neighbor] != 0) { // Check if there's an edge
-            if (!visited[neighbor]) {
-                if (dfs_UD_cycle_detection(g, neighbor, visited, in_recursion_stack, path)) {
+    for (size_t neighbor = 0; neighbor < g.get_matrix()[v].size(); ++neighbor)
+    {
+        if (g.get_matrix()[v][neighbor] != 0)
+        { // Check if there's an edge
+            if (!visited[neighbor])
+            {
+                if (dfs_UD_cycle_detection(g, neighbor, visited, in_recursion_stack, path))
+                {
                     return true;
                 }
-            } else if (in_recursion_stack[neighbor]) {
+            }
+            else if (in_recursion_stack[neighbor])
+            {
                 return true; // Cycle detected
             }
         }
     }
     in_recursion_stack[v] = false; // Remove from recursion stack when backtracking
-    path.pop_back(); // Remove from the current path
+    path.pop_back();               // Remove from the current path
     return false;
 }
 
-bool Algorithms::is_cycle_UD(Graph& g) {
+bool Algorithms::is_cycle_UD(Graph &g)
+{
     size_t n = g.get_matrix().size();
     vector<bool> visited(n, false);
     vector<bool> in_recursion_stack(n, false);
     vector<int> path;
 
-    for (size_t i = 0; i < n; ++i) {
-        if (!visited[i]) {
-            if (dfs_UD_cycle_detection(g, i, visited, in_recursion_stack, path)) {
+    for (size_t i = 0; i < n; ++i)
+    {
+        if (!visited[i])
+        {
+            if (dfs_UD_cycle_detection(g, i, visited, in_recursion_stack, path))
+            {
                 print_cycle(path);
                 return true;
             }
@@ -423,30 +410,149 @@ bool Algorithms::is_cycle_UD(Graph& g) {
     return false;
 }
 
-
-
-
-
 bool Algorithms::isContainsCycle(Graph &g)
 {
     if (g.isDirectedG())
     {
 
-    return(is_cycle_UD(g));
+        return (is_cycle_UD(g));
     }
     else if (!g.isDirectedG())
     {
-      return(is_cycle_D(g.get_matrix()));
+        return (is_cycle_D(g.get_matrix()));
     }
 
     return 1;
 }
 
-int Algorithms::isBipartite(Graph g)
+string Algorithms::Two_Color_Division(Graph &g)
 {
-    return 1;
+    vector<int> A;
+    vector<int> B;
+    unordered_map<size_t, size_t> color; // Map to store colors of nodes
+    queue<int> q;
+
+    // Start BFS traversal from each unvisited node
+    for (size_t i = 0; i < g.getSize(); ++i)
+    {
+        if (color.find(i) == color.end())
+        { // Unvisited node
+            q.push(i);
+            color[i] = 0; // Assign color 0 to start with
+
+            while (!q.empty())
+            {
+                size_t u = (size_t)q.front();
+                q.pop();
+                if (color[u] == 0)
+                    A.push_back(u);
+                else
+                    B.push_back(u);
+
+                // Traverse neighbors of u
+                // Traverse neighbors of u
+                for (size_t v = 0; v < g.get_matrix()[u].size(); ++v)
+                {
+                    if (g.get_matrix()[u][v] != 0)
+                    {
+                        if (color.find(v) == color.end())
+                        {                            // Unvisited neighbor
+                            color[v] = 1 - color[u]; // Assign opposite color
+                            q.push(v);
+                        }
+                        else if (color[v] == color[u])
+                        {
+                            // If neighbor has same color as u, not bipartite
+                            return "0";
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Construct strings representing sets A and B
+    string setA = "{";
+    string setB = "{";
+    for (int node : A)
+    {
+        setA += to_string(node) + ", ";
+    }
+    if (!setA.empty())
+    {
+        setA.pop_back(); // Remove the last comma
+        setA.pop_back(); // Remove the space
+    }
+    setA += "}";
+
+    for (int node : B)
+    {
+        setB += to_string(node) + ", ";
+    }
+    if (!setB.empty())
+    {
+        setB.pop_back(); // Remove the last comma
+        setB.pop_back(); // Remove the space
+    }
+    setB += "}";
+
+    return "The graph is bipartite: A=" + setA + ", B=" + setB;
 }
 
-void negativeCycle(Graph g)
+string Algorithms::isBipartite(Graph &g)
 {
+    if (!g.isDirectedG())
+    {
+        return Two_Color_Division(g);
+    }
+    Graph Clique = g.getClique();
+    return Two_Color_Division(Clique);
+}
+
+bool Algorithms::bellmanFord_negative_cycle(Graph &g)
+{
+    size_t n = g.getSize();
+    size_t source = 0;
+    size_t target = n;
+    if (source == target)
+    {
+        return fasle;
+    }
+
+    vector<int> dist(n, INT_MAX);
+    dist[source] = 0;
+
+    // Relax all edges |V| - 1 times
+    for (size_t i = 0; i < n - 1; ++i)
+    {
+        for (size_t u = 0; u < n; ++u)
+        {
+            for (size_t v = 0; v < n; ++v)
+            {
+                if (g.get_matrix()[u][v] != 0 && dist[u] != INT_MAX && dist[u] + g.get_matrix()[u][v] < dist[v])
+                {
+                    dist[v] = dist[u] + g.get_matrix()[u][v];
+                }
+            }
+        }
+    }
+
+    // Check for negative cycles
+    for (size_t u = 0; u < n; ++u)
+    {
+        for (size_t v = 0; v < n; ++v)
+        {
+            if (g.get_matrix()[u][v] != 0 && dist[u] != INT_MAX && dist[u] + g.get_matrix()[u][v] < dist[v])
+            {
+                cout << "Graph contains negative weight cycle" << endl;
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+bool negativeCycle(Graph &g)
+{
+    return bellmanFord_negative_cycle(g);
 }

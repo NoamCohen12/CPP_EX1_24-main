@@ -26,6 +26,8 @@ namespace ariel
         bool isDirectedG();
         int graph_type(vector<vector<int> > graph);
         int get_type_graph();
+        Graph getTranspose() const;
+        Graph getClique() const;
     };
 }
 #endif

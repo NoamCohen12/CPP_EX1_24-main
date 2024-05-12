@@ -74,6 +74,44 @@ int Graph::get_type_graph()
     return this->type_graph;
 }
 
+
+
+Graph Graph::getTranspose() const {
+    Graph gTranspose(true);
+    size_t n = this->v;
+    vector<vector<int>> transpose(n, vector<int>(n, 0));
+    for (size_t i = 0; i < n; ++i) {
+        for (size_t j = 0; j < n; ++j) {
+            transpose[j][i] = this->matrix[i][j];
+        }
+    }
+    gTranspose.loadGraph(transpose); // Assign the transposed matrix to GT
+    return gTranspose;
+}
+
+Graph Graph::getClique() const {
+    Graph gClique(true);
+    size_t n = this->v;
+    vector<vector<int>> Clique(n, vector<int>(n, 0));
+    for (size_t i = 0; i < n; ++i) {
+        for (size_t j = 0; j < n; ++j) {
+            Clique[j][i] = this->matrix[j][i];
+            if (Clique[j][i] > 0 && Clique[i][j] == 0)
+            {
+               Clique[i][j] = this->matrix[j][i];
+            }
+        }
+    }
+    gClique.loadGraph(Clique); // Assign the Clique matrix to gClique
+    return gClique;
+}
+
+
+
+
+
+
+
 int Graph::graph_type(vector<vector<int> > graph)
 {
     int type = without_weights_edges;
