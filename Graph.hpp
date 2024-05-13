@@ -21,11 +21,11 @@ namespace ariel
         Graph( bool isDirected);
         void loadGraph(vector<vector<int> > &graph);
         void printGraph();
-        size_t getSize();
-        vector<vector<int> > get_matrix();
-        bool isDirectedG();
-        int graph_type(vector<vector<int> > graph);
-        int get_type_graph();
+        size_t getSize()const; 
+        vector<vector<int> > get_matrix()const;
+        bool isDirectedG()const;
+        int graph_type(vector<vector<int> > &graph);
+        int get_type_graph()const;
         Graph getTranspose() const;
         Graph getClique() const;
     };

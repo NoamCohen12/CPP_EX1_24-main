@@ -9,7 +9,7 @@ Graph::Graph(bool isDirected1)
     this->type_graph = 0;
 }
 
-size_t Graph::getSize()
+size_t Graph::getSize()const
 {
     return this->v;
 }
@@ -19,7 +19,7 @@ void Graph::loadGraph(vector<vector<int> > &graph)
 {
     this->v = graph.size();
     this->matrix = graph;
-    if (graph.size() != graph[0].size() || graph.size() == 0)
+    if (graph.size() != graph[0].size() || graph.empty())
     {
 
         throw invalid_argument("your matrix should be squer");
@@ -59,17 +59,17 @@ void Graph::printGraph()
     }
 }
 
-vector<vector<int> > Graph::get_matrix()
+vector<vector<int> > Graph::get_matrix() const
 {
     return this->matrix;
 }
 
-bool Graph::isDirectedG()
+bool Graph::isDirectedG() const
 {
     return this->isDirected;
 }
 
-int Graph::get_type_graph()
+int Graph::get_type_graph() const
 {
     return this->type_graph;
 }
@@ -78,10 +78,10 @@ int Graph::get_type_graph()
 
 Graph Graph::getTranspose() const {
     Graph gTranspose(true);
-    size_t n = this->v;
-    vector<vector<int>> transpose(n, vector<int>(n, 0));
-    for (size_t i = 0; i < n; ++i) {
-        for (size_t j = 0; j < n; ++j) {
+    size_t number_vertixs = this->v;
+    vector<vector<int>> transpose(number_vertixs, vector<int>(number_vertixs, 0));
+    for (size_t i = 0; i < number_vertixs; ++i) {
+        for (size_t j = 0; j < number_vertixs; ++j) {
             transpose[j][i] = this->matrix[i][j];
         }
     }
@@ -91,10 +91,10 @@ Graph Graph::getTranspose() const {
 
 Graph Graph::getClique() const {
     Graph gClique(true);
-    size_t n = this->v;
-    vector<vector<int>> Clique(n, vector<int>(n, 0));
-    for (size_t i = 0; i < n; ++i) {
-        for (size_t j = 0; j < n; ++j) {
+    size_t number_vertixs = this->v;
+    vector<vector<int>> Clique(number_vertixs, vector<int>(number_vertixs, 0));
+    for (size_t i = 0; i < number_vertixs; ++i) {
+        for (size_t j = 0; j < number_vertixs; ++j) {
             Clique[j][i] = this->matrix[j][i];
             if (Clique[j][i] > 0 && Clique[i][j] == 0)
             {
@@ -112,7 +112,7 @@ Graph Graph::getClique() const {
 
 
 
-int Graph::graph_type(vector<vector<int> > graph)
+int Graph::graph_type(vector<vector<int> > &graph)
 {
     int type = without_weights_edges;
     for (size_t i = 0; i < matrix.size(); i++)
@@ -123,7 +123,7 @@ int Graph::graph_type(vector<vector<int> > graph)
             {
                 return negative_edges;
             }
-            else if (matrix[i][j] > 0)
+             if (matrix[i][j] > 0)
             {
                 type = positive_edges;
             }

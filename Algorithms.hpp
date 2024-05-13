@@ -19,42 +19,44 @@ namespace ariel
     class Algorithms
     {
     public:
-        static vector<bool> dfs_graph(Graph g);
+        static vector<bool> dfs_graph(Graph &graph);
 
-        //static vector<vector<int> > dfs_Vertex(Graph &g, int root);
+        static bool bfs(vector<vector<int> > adj, int start);
 
-        static int bfs(vector<vector<int> > adj, int start);
+        static string find_path_bfs(Graph &graph, size_t start, size_t end);
 
-        static string find_path_bfs(Graph &g, size_t start, size_t end);
+        static string dijkstra(const Graph &graph, size_t source, size_t target);
 
-        static int dijkstra(Graph &matrix, size_t source, size_t target);
+        static string bellmanFord(const Graph &graph, size_t source, size_t target);
 
-        static int bellmanFord(Graph &g, size_t source, size_t target);//TODO UNDIRECTED
-
-        static bool dfs_D_cycle_detection(size_t vertex, int parent, const vector<vector<int> > &graph, vector<bool> &visited, vector<int> &cycle);
+        static bool dfs_D_cycle_detection(size_t vertex, const vector<vector<int> > &graph, vector<bool> &visited, int parent, vector<size_t> &current_cycle);
 
         static bool is_cycle_D(const vector<vector<int> > &graph);
 
-        static bool dfs_UD_cycle_detection(Graph &g, size_t v, vector<bool> &visited, vector<bool> &in_recursion_stack, vector<int> &path);
+        static bool dfs_UD_cycle_detection(Graph &graph, size_t source, vector<bool> &visited, vector<bool> &in_recursion_stack, vector<size_t> &path);
 
-        static bool is_cycle_UD(Graph &g);
+        static bool is_cycle_UD(Graph &graph);
 
-        static void print_cycle(vector<int> &cycle);
+        static void print_cycle(vector<size_t> &cycle);
 
-        static int isConnected(Graph g);
+        static bool isConnected(Graph graph);
 
-        static string shortestPath(Graph g, size_t start, size_t end);
+        static string shortestPath(Graph graph, size_t start, size_t end);
 
-        static bool isContainsCycle(Graph &g);
+        static bool isContainsCycle(Graph &graph);
 
-        static string Two_Color_Division(Graph &g) ;
+        static string constructSetString(const vector<int> &Group);
 
-        static string isBipartite(Graph &g);
+        static string Two_Color_Division(Graph &graph);
 
-       static bool bellmanFord_negative_cycle(Graph &g);
+        static string isBipartite(Graph &graph);
 
+        static bool bellmanFord_negative_cycle(Graph &graph);
+        static void printNegativeCycle(const vector<size_t> &cycle);
+        static void relax(size_t verex1, size_t verex2, vector<int> &dist, vector<size_t> &pred, Graph &graph);
+        
 
-        static bool negativeCycle(Graph &g);
-    };
-}
+            static bool negativeCycle(Graph & graph);
+        };
+    }
 #endif
