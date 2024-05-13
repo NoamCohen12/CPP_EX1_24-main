@@ -48,7 +48,7 @@ int Algorithms::bfs(vector<vector<int> > adjacency_matrix, int start_node)
 
         for (int i = 0; i < adjacency_matrix[(size_t)current_node].size(); i++)
         {
-            if (adjacency_matrix[(size_t)current_node][(size_t)i] > 0 && !visited[(size_t)i])
+            if (adjacency_matrix[(size_t)current_node][(size_t)i] != 0 && !visited[(size_t)i])
             {
                 queue.push(i);
                 visited[(size_t)i] = true;
@@ -81,14 +81,14 @@ int Algorithms::isConnected(Graph g)
     size_t n = g.getSize();
     vector<bool> visit_dfs1 = dfs_graph(g);
     Graph GT = g.getTranspose();
-    // vector<bool> visit_dfs2 = dfs_graph(GT);
-    // for (size_t i = 0; i < n; i++)
-    // {
-    //     if (visit_dfs1[i] == false || visit_dfs2[i] == false)
-    //     {
-    //         return false;
-    //     }
-    // }
+    vector<bool> visit_dfs2 = dfs_graph(GT);
+    for (size_t i = 0; i < n; i++)
+    {
+        if (visit_dfs1[i] == false || visit_dfs2[i] == false)
+        {
+            return false;
+        }
+    }
 
     return true;
 }
@@ -271,7 +271,7 @@ bool Algorithms::dfs_D_cycle_detection(size_t vertex, int parent, const vector<v
     visited[vertex] = true;
     for (size_t neighbor = 0; neighbor < graph.size(); ++neighbor)
     {
-        if (graph[vertex][neighbor] > 0)
+        if (graph[vertex][neighbor] != 0)
         { // Check if there is an edge between the vertices
             if (!visited[neighbor])
             {
@@ -336,6 +336,12 @@ string Algorithms::shortestPath(Graph g, size_t start, size_t end)
     {
         throw invalid_argument("Invalid source or destination vertex");
     }
+
+    if (negativeCycle(g)==true)
+    {
+       return "-1";//if there is negative cycle there is not shortest path
+    }
+    
     if (start == end)
     {
         return to_string(start);
@@ -509,17 +515,14 @@ string Algorithms::isBipartite(Graph &g)
     return Two_Color_Division(Clique);
 }
 
-bool Algorithms::bellmanFord_negative_cycle(Graph &g)
+bool Algorithms:: bellmanFord_negative_cycle(Graph &g)
 {
+    vector<size_t> cycle;
     size_t n = g.getSize();
     size_t source = 0;
-    size_t target = n;
-    if (source == target)
-    {
-        return fasle;
-    }
-
+    vector<bool> in_path(g.getSize(), false); // Mark vertices in the current path
     vector<int> dist(n, INT_MAX);
+    vector<size_t> pred(n, 0); // Store predecessors for tracing the cycle
     dist[source] = 0;
 
     // Relax all edges |V| - 1 times
@@ -532,11 +535,11 @@ bool Algorithms::bellmanFord_negative_cycle(Graph &g)
                 if (g.get_matrix()[u][v] != 0 && dist[u] != INT_MAX && dist[u] + g.get_matrix()[u][v] < dist[v])
                 {
                     dist[v] = dist[u] + g.get_matrix()[u][v];
+                    pred[v] = u; // Update predecessor
                 }
             }
         }
     }
-
     // Check for negative cycles
     for (size_t u = 0; u < n; ++u)
     {
@@ -544,15 +547,42 @@ bool Algorithms::bellmanFord_negative_cycle(Graph &g)
         {
             if (g.get_matrix()[u][v] != 0 && dist[u] != INT_MAX && dist[u] + g.get_matrix()[u][v] < dist[v])
             {
-                cout << "Graph contains negative weight cycle" << endl;
-                return false;
+               // Negative cycle detected
+                size_t curr = v;
+                while (!in_path[curr])
+                {
+                    in_path[curr] = true; // Mark the current vertex
+                    curr = pred[curr];
+                }
+
+                vector<size_t> cycle;
+                size_t start = curr;
+                do
+                {
+                    cycle.push_back(curr);
+                    curr = pred[curr];
+                } while (curr != start);
+
+                
+                cout << "Graph contains negative weight cycle: ";
+                for (size_t i = cycle.size() - 1; i > 0; --i){
+                    cout << cycle[i] << "->";
+                }
+                cout << cycle[0];
+                cout << "->" << cycle[cycle.size()-1]<<endl;
+               
+
+
+                return true; // Negative cycle found
             }
         }
     }
-    return true;
+
+    return false; // No negative cycle found
 }
 
-bool negativeCycle(Graph &g)
+bool Algorithms::negativeCycle(Graph &g)
 {
+    
     return bellmanFord_negative_cycle(g);
 }
