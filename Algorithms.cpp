@@ -537,6 +537,7 @@ bool Algorithms::bellmanFord_negative_cycle(Graph &graph)
                 relax(j, k,  dist,  pred, graph); 
             }
         }
+        
     }
     // Check for negative cycles
     for (size_t j = 0; j < number_vertixs; ++j)
