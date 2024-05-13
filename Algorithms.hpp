@@ -50,7 +50,6 @@ namespace ariel
         static string Two_Color_Division(Graph &graph);
 
         static string isBipartite(Graph &graph);
-
         static bool bellmanFord_negative_cycle(Graph &graph);
         static void printNegativeCycle(const vector<size_t> &cycle);
         static void relax(size_t verex1, size_t verex2, vector<int> &dist, vector<size_t> &pred, Graph &graph);
