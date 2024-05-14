@@ -102,21 +102,21 @@ Graph Graph::getTranspose() const {
     return gTranspose;
 }
 
-Graph Graph::getClique() const {
-    Graph gClique(true);
+Graph Graph::add_opposite_edges() const {
+    Graph fix_graph(true);
     size_t num_vertices = this->num_vertices;
-    vector<vector<int>> Clique(num_vertices, vector<int>(num_vertices, 0));
+    vector<vector<int>> new_matrix(num_vertices, vector<int>(num_vertices, 0));
     for (size_t i = 0; i < num_vertices; ++i) {
         for (size_t j = 0; j < num_vertices; ++j) {
-            Clique[j][i] = this->matrix[j][i];
-            if (Clique[j][i] > 0 && Clique[i][j] == 0)
+            new_matrix[j][i] = this->matrix[j][i];
+            if (new_matrix[j][i] > 0 && new_matrix[i][j] == 0)
             {
-               Clique[i][j] = this->matrix[j][i];
+               new_matrix[i][j] = this->matrix[j][i];
             }
         }
     }
-    gClique.loadGraph(Clique); // Assign the Clique matrix to gClique
-    return gClique;
+    fix_graph.loadGraph(new_matrix); // Assign the new_matrix to fix_graph
+    return fix_graph;
 }
 
 

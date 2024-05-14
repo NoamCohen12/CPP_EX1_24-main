@@ -1,40 +1,11 @@
 #include "Algorithms.hpp"
 using namespace ariel;
-vector<bool> Algorithms::dfs_graph(Graph &graph)
+/*
+Implementation of the bfs algorithm that helps to know if we have visited all the vertices
+*/
+bool Algorithms::bfs(vector<vector<int> > matrix, int start_node)
 {
-    size_t number_vertixs = graph.getSize(); // number of vertix
-    vector<bool> visited(number_vertixs, false);
-    vector<vector<int> > matrix = graph.get_matrix();
-    stack<size_t> Stack;
-    for (size_t i = 0; i < number_vertixs; i++)
-    {
-        if (!visited[i])
-        {
-            Stack.push(i);
-            visited[i] = true;
-
-            while (!Stack.empty())
-            {
-                size_t current_node = Stack.top();
-                Stack.pop();
-
-                for (size_t neighbor = 0; neighbor < graph.get_matrix()[(size_t)current_node].size(); neighbor++)
-                {
-                    if (graph.get_matrix()[current_node][neighbor] != 0 && !visited[neighbor])
-                    {
-                        Stack.push(neighbor);
-                        visited[neighbor] = true;
-                    }
-                }
-            }
-        }
-    }
-    return visited;
-}
-
-bool Algorithms::bfs(vector<vector<int> > adjacency_matrix, int start_node)
-{
-    vector<bool> visited(adjacency_matrix.size(), false);
+    vector<bool> visited(matrix.size(), false);
 
     queue<int> queue;
 
@@ -46,9 +17,9 @@ bool Algorithms::bfs(vector<vector<int> > adjacency_matrix, int start_node)
         int current_node = queue.front();
         queue.pop();
 
-        for (int i = 0; i < adjacency_matrix[(size_t)current_node].size(); i++)
+        for (int i = 0; i < matrix[(size_t)current_node].size(); i++)
         {
-            if (adjacency_matrix[(size_t)current_node][(size_t)i] != 0 && !visited[(size_t)i])
+            if (matrix[(size_t)current_node][(size_t)i] != 0 && !visited[(size_t)i])
             {
                 queue.push(i);
                 visited[(size_t)i] = true;
@@ -64,36 +35,44 @@ bool Algorithms::bfs(vector<vector<int> > adjacency_matrix, int start_node)
     }
     return true;
 }
+/*
+I referred to cases of "Strong connectivity"
 
-// in the case that graph is undirected we use BFS algoritem
-//  check if we visted all the vertix
+Undirected case:
+use BFS algoritem that return us if  all the vertices visted
 
-// in the case that graph is undirected we use DFS algoritem
-// we got many trees and we make DFS For the second time on the root of last tree
-// if we got one tree the graph isConnected
 
+Directed case:
+1.Use BFS in the first time on original graph
+2.We will reverse the directions of the edges e.g: Transpose graph
+3.Use BFS in the two time on Transpose graph
+check if both return true isConnected return true
+*/
 bool Algorithms::isConnected(Graph graph)
 {
-    if (!graph.isDirectedG())
+    size_t number_vertices = graph.getSize();
+    if (number_vertices == 0 || number_vertices == 1)
     {
-        return bfs((graph.get_matrix()), 0);
-    }
-    size_t number_vertixs = graph.getSize();
-    vector<bool> visit_dfs1 = dfs_graph(graph);
-    Graph GTranspose = graph.getTranspose();
-    vector<bool> visit_dfs2 = dfs_graph(GTranspose);
-    for (size_t i = 0; i < number_vertixs; i++)
-    {
-        if (!visit_dfs1[i] || !visit_dfs2[i])
-        {
-            return false;
-        }
+        return true;
     }
 
-    return true;
+    else if (!graph.isDirectedG())
+    {
+        return bfs(graph.get_matrix(), 0);
+    }
+
+    else
+    {
+        bool One_Direction = bfs(graph.get_matrix(), 0);
+        Graph GTranspose = graph.getTranspose();
+        bool Second_Direction = bfs(GTranspose.get_matrix(), 0);
+        return One_Direction || Second_Direction;
+    }
 }
 
-// Function to find a path between start and end vertices using BFS and print the path
+/*
+    This function finds a path between two vertices using BFS and prints the path.
+*/
 string ariel::Algorithms::find_path_bfs(Graph &graph, size_t start, size_t end)
 {
     vector<vector<int> > matrix = graph.get_matrix();
@@ -143,13 +122,16 @@ string ariel::Algorithms::find_path_bfs(Graph &graph, size_t start, size_t end)
     }
     return "-1"; // No path found
 }
-
+/*
+    This function implements Dijkstra's algorithm
+    to find the shortest path between two vertices.
+*/
 string Algorithms::dijkstra(const Graph &graph, size_t source, size_t target)
 {
-    size_t number_vertixs = graph.get_matrix().size();
-    vector<int> dist(number_vertixs, INT_MAX);
-    vector<int> parent(number_vertixs, -1);
-    vector<bool> visited(number_vertixs, false);
+    size_t number_vertices = graph.get_matrix().size();
+    vector<int> dist(number_vertices, INT_MAX);
+    vector<int> parent(number_vertices, -1);
+    vector<bool> visited(number_vertices, false);
     priority_queue<pair<int, int>, vector<pair<int, int> >, greater<pair<int, int> > > Pqueue;
 
     dist[source] = 0;
@@ -171,7 +153,7 @@ string Algorithms::dijkstra(const Graph &graph, size_t source, size_t target)
             break;
         }
 
-        for (size_t k = 0; k < number_vertixs; ++k)
+        for (size_t k = 0; k < number_vertices; ++k)
         {
             if (graph.get_matrix()[vertex][k] != 0 && !visited[k] && dist[vertex] + graph.get_matrix()[vertex][k] < dist[k])
             {
@@ -209,20 +191,25 @@ string Algorithms::dijkstra(const Graph &graph, size_t source, size_t target)
 
     return shortest_path;
 }
+/*
+    This function implements the Bellman-Ford algorithm
+     to find the shortest path between two vertices,
+    considering graphs with negative edge weights.
+*/
 string Algorithms::bellmanFord(const Graph &graph, size_t source, size_t target)
 {
-    size_t number_vertixs = graph.get_matrix().size();
-    vector<int> dist(number_vertixs, INT_MAX);
-    vector<int> parent(number_vertixs, -1);
+    size_t number_vertices = graph.get_matrix().size();
+    vector<int> dist(number_vertices, INT_MAX);
+    vector<int> parent(number_vertices, -1);
 
     dist[source] = 0;
 
     // Relax all edges |V| - 1 times
-    for (size_t i = 0; i < number_vertixs - 1; ++i)
+    for (size_t i = 0; i < number_vertices - 1; ++i)
     {
-        for (size_t j = 0; j < number_vertixs; ++j)
+        for (size_t j = 0; j < number_vertices; ++j)
         {
-            for (size_t k = 0; k < number_vertixs; ++k)
+            for (size_t k = 0; k < number_vertices; ++k)
             {
                 if (graph.get_matrix()[j][k] != 0 && dist[j] != INT_MAX && dist[j] + graph.get_matrix()[j][k] < dist[k])
                 {
@@ -234,9 +221,9 @@ string Algorithms::bellmanFord(const Graph &graph, size_t source, size_t target)
     }
 
     // Check for negative cycles
-    for (size_t j = 0; j < number_vertixs; ++j)
+    for (size_t j = 0; j < number_vertices; ++j)
     {
-        for (size_t k = 0; k < number_vertixs; ++k)
+        for (size_t k = 0; k < number_vertices; ++k)
         {
             if (graph.get_matrix()[j][k] != 0 && dist[j] != INT_MAX && dist[j] + graph.get_matrix()[j][k] < dist[k])
             {
@@ -274,72 +261,16 @@ string Algorithms::bellmanFord(const Graph &graph, size_t source, size_t target)
 
     return shortest_path;
 }
-
-bool Algorithms::dfs_D_cycle_detection(size_t vertex, const vector<vector<int> > &graph, vector<bool> &visited, int parent, vector<size_t> &current_cycle)
-
-// bool Algorithms::dfs_D_cycle_detection(size_t vertex, int parent, const vector<vector<int> > &graph, vector<bool> &visited, vector<size_t> &current_cycle)
-{
-    visited[vertex] = true;
-    for (size_t neighbor = 0; neighbor < graph.size(); ++neighbor)
-    {
-        if (graph[vertex][neighbor] != 0)
-        { // Check if there is an edge between the vertices
-            if (!visited[neighbor])
-            {
-                current_cycle.push_back(vertex); // Add current vertex to cycle
-                if (dfs_D_cycle_detection(neighbor, graph, visited, (int)vertex, current_cycle))
-                {
-                    return true;
-                }
-                current_cycle.pop_back(); // Remove current vertex if no cycle found in subtree
-            }
-            else if (neighbor != parent)
-            {
-                current_cycle.push_back(vertex);   // Add current vertex to cycle
-                current_cycle.push_back(neighbor); // Add neighbor to cycle
-                return true;                       // Cycle detected
-            }
-        }
-    }
-    return false; // No cycle found
-}
-bool Algorithms::is_cycle_D(const vector<vector<int> > &graph)
-{
-    size_t number_vertixs = graph.size();
-    vector<bool> visited(number_vertixs, false);
-
-    for (size_t k = 0; k < number_vertixs; ++k)
-    {
-        if (!visited[k])
-        {
-            vector<size_t> current_cycle;
-            if (dfs_D_cycle_detection(k, graph, visited, -1, current_cycle))
-            {
-                cout << "Cycle found: ";
-                print_cycle(current_cycle);
-                // cout << current_cycle[0]; // Print the first vertex again to close the cycle
-                // cout << endl;
-                return true; // Cycle detected
-            }
-        }
-    }
-    // cout << "No cycle found" << endl;
-
-    return false; // No cycle found
-}
-void Algorithms::print_cycle(vector<size_t> &cycle)
-{
-    // cout << "Cycle found: ";
-    for (size_t i = 0; i < cycle.size(); ++i)
-    {
-        cout << cycle[i];
-        if (i < cycle.size() - 1)
-        {
-            cout << "->";
-        }
-    }
-    cout << endl;
-}
+/*
+    This function calculates the shortest path between two vertices in a graph. 
+    It handles three cases:
+    1. If the graph is empty or either the start or end vertex is out of range, it throws an invalid_argument exception.
+    2. If the graph contains a negative weight cycle, it returns "-1" to indicate that there is no shortest path.
+    3. Depending on the type of graph, it uses different algorithms to find the shortest path:
+        - For graphs without weighted edges, it uses BFS to find the shortest path.
+        - For graphs with positive edge weights, it uses Dijkstra's algorithm.
+        - For graphs with negative edge weights, it uses the Bellman-Ford algorithm.
+*/
 
 string Algorithms::shortestPath(Graph graph, size_t start, size_t end)
 {
@@ -374,7 +305,7 @@ string Algorithms::shortestPath(Graph graph, size_t start, size_t end)
     return "-1";
 }
 
-bool Algorithms::dfs_UD_cycle_detection(Graph &graph, size_t source, vector<bool> &visited, vector<bool> &in_recursion_stack, vector<size_t> &path)
+bool Algorithms::dfs_D_cycle_detection(Graph &graph, size_t source, vector<bool> &visited, vector<bool> &in_recursion_stack, vector<size_t> &path)
 {
     visited[source] = true;
     in_recursion_stack[source] = true;
@@ -386,7 +317,7 @@ bool Algorithms::dfs_UD_cycle_detection(Graph &graph, size_t source, vector<bool
         { // Check if there's an edge
             if (!visited[neighbor])
             {
-                if (dfs_UD_cycle_detection(graph, neighbor, visited, in_recursion_stack, path))
+                if (dfs_D_cycle_detection(graph, neighbor, visited, in_recursion_stack, path))
                 {
                     return true;
                 }
@@ -401,19 +332,22 @@ bool Algorithms::dfs_UD_cycle_detection(Graph &graph, size_t source, vector<bool
     path.pop_back();                    // Remove from the current path
     return false;
 }
-
-bool Algorithms::is_cycle_UD(Graph &graph)
+/*
+    This function implements a DFS-based cycle detection algorithm for directed graphs.
+    //TODOOOO
+*/
+bool Algorithms::is_cycle_D(Graph &graph)
 {
-    size_t number_vertixs = graph.get_matrix().size();
-    vector<bool> visited(number_vertixs, false);
-    vector<bool> in_recursion_stack(number_vertixs, false);
+    size_t number_vertices = graph.get_matrix().size();
+    vector<bool> visited(number_vertices, false);
+    vector<bool> in_recursion_stack(number_vertices, false);
     vector<size_t> path;
 
-    for (size_t i = 0; i < number_vertixs; ++i)
+    for (size_t i = 0; i < number_vertices; ++i)
     {
         if (!visited[i])
         {
-            if (dfs_UD_cycle_detection(graph, i, visited, in_recursion_stack, path))
+            if (dfs_D_cycle_detection(graph, i, visited, in_recursion_stack, path))
             {
                 print_cycle(path);
                 return true;
@@ -424,17 +358,91 @@ bool Algorithms::is_cycle_UD(Graph &graph)
     cout << "-1" << endl;
     return false;
 }
+/*
+This function detects cycles in an undirected graph using depth-first search (DFS).
+It recursively explores each vertex's neighbors and tracks visited vertices to identify cycles.
+If a neighbor is visited and not the parent of the current vertex, a cycle is detected.
+The function returns true if a cycle is found, otherwise false.
+*/
+bool Algorithms::dfs_UD_cycle_detection(size_t vertex, const vector<vector<int> > &graph, vector<bool> &visited, int parent, vector<size_t> &current_cycle)
+{
+    visited[vertex] = true;
+    for (size_t neighbor = 0; neighbor < graph.size(); ++neighbor)
+    {
+        if (graph[vertex][neighbor] != 0)
+        { // Check if there is an edge between the vertices
+            if (!visited[neighbor])
+            {
+                current_cycle.push_back(vertex); // Add current vertex to cycle
+                if (dfs_UD_cycle_detection(neighbor, graph, visited, (int)vertex, current_cycle))
+                {
+                    return true;
+                }
+                current_cycle.pop_back(); // Remove current vertex if no cycle found in subtree
+            }
+            else if (neighbor != parent)
+            {
+                current_cycle.push_back(vertex);   // Add current vertex to cycle
+                current_cycle.push_back(neighbor); // Add neighbor to cycle (the last in a cycle)
+                return true;                       // Cycle detected
+            }
+        }
+    }
+    return false; // No cycle found
+}
+/*
+    This function implements a DFS-based cycle detection algorithm for undirected graphs.
+*/
+bool Algorithms::is_cycle_UD(const vector<vector<int> > &graph)
+{
+    size_t number_vertices = graph.size();
+    vector<bool> visited(number_vertices, false);
+
+    for (size_t k = 0; k < number_vertices; ++k)
+    {
+        if (!visited[k])
+        {
+            vector<size_t> current_cycle;
+            if (dfs_UD_cycle_detection(k, graph, visited, -1, current_cycle))
+            {
+                cout << "Cycle found: ";
+                print_cycle(current_cycle);
+                // cout << current_cycle[0]; // Print the first vertex again to close the cycle
+                // cout << endl;
+                return true; // Cycle detected
+            }
+        }
+    }
+    // cout << "No cycle found" << endl;
+
+    return false; // No cycle found
+}
+void Algorithms::print_cycle(vector<size_t> &cycle)
+{
+    // cout << "Cycle found: ";
+    for (size_t i = 0; i < cycle.size(); ++i)
+    {
+        cout << cycle[i];
+        if (i < cycle.size() - 1)
+        {
+            cout << "->";
+        }
+    }
+    cout << endl;
+}
 
 bool Algorithms::isContainsCycle(Graph &graph)
 {
     if (graph.isDirectedG())
     {
-        return (is_cycle_UD(graph));
+        return (is_cycle_D(graph));
     }
-
-    return (is_cycle_D(graph.get_matrix()));
+    return (is_cycle_UD(graph.get_matrix()));
 }
-
+/*
+    This function checks if a graph is bipartite
+     using a two-coloring algorithm based on BFS.
+*/
 string Algorithms::Two_Color_Division(Graph &graph)
 {
     vector<int> Group_A;
@@ -506,42 +514,54 @@ string Algorithms::constructSetString(const vector<int> &Group)
     setStr += "}";
     return setStr;
 }
+/*
+    This function checks if a graph is bipartite using a two-coloring algorithm.
+    Undirected case:
+    checks if a graph is two-coloring.
 
+    Directed case:
+    1.add opposite edges
+    2.checks if a graph is two-coloring.
+
+
+*/
 string Algorithms::isBipartite(Graph &graph)
 {
     if (!graph.isDirectedG())
     {
         return Two_Color_Division(graph);
     }
-    Graph Clique = graph.getClique();
-    return Two_Color_Division(Clique);
+    Graph fix_graph = graph.add_opposite_edges();
+    return Two_Color_Division(fix_graph);
 }
-
+/*
+Bellman-Ford algorithm which also finds a negative cycle
+*/
 bool Algorithms::bellmanFord_negative_cycle(Graph &graph)
 {
     vector<size_t> cycle;
-    size_t number_vertixs = graph.getSize();
+    size_t number_vertices = graph.getSize();
     size_t source = 0;
     vector<bool> in_path(graph.getSize(), false); // Mark vertices in the current path
-    vector<int> dist(number_vertixs, INT_MAX);
-    vector<size_t> pred(number_vertixs, 0); // Store predecessors for tracing the cycle
+    vector<int> dist(number_vertices, INT_MAX);
+    vector<size_t> pred(number_vertices, 0); // Store predecessors for tracing the cycle
     dist[source] = 0;
 
     // Relax all edges |V| - 1 times
-    for (size_t i = 0; i < number_vertixs - 1; ++i)
+    for (size_t i = 0; i < number_vertices - 1; ++i)
     {
-        for (size_t j = 0; j < number_vertixs; ++j)
+        for (size_t j = 0; j < number_vertices; ++j)
         {
-            for (size_t k = 0; k < number_vertixs; ++k)
+            for (size_t k = 0; k < number_vertices; ++k)
             {
-                relax(j, k,  dist,  pred, graph); 
+                relax(j, k, dist, pred, graph);
             }
         }
     }
     // Check for negative cycles
-    for (size_t j = 0; j < number_vertixs; ++j)
+    for (size_t j = 0; j < number_vertices; ++j)
     {
-        for (size_t k = 0; k < number_vertixs; ++k)
+        for (size_t k = 0; k < number_vertices; ++k)
         {
             if (graph.get_matrix()[j][k] != 0 && dist[j] != INT_MAX && dist[j] + graph.get_matrix()[j][k] < dist[k])
             {
@@ -570,6 +590,10 @@ bool Algorithms::bellmanFord_negative_cycle(Graph &graph)
 
     return false; // No negative cycle found
 }
+/*
+    Utility function to print the negative weight
+    cycle found by Bellman-Ford algorithm.
+*/
 void Algorithms::printNegativeCycle(const vector<size_t> &cycle)
 {
     cout << "Graph contains negative weight cycle: ";
@@ -580,12 +604,21 @@ void Algorithms::printNegativeCycle(const vector<size_t> &cycle)
     cout << cycle[0];
     cout << "->" << cycle[cycle.size() - 1] << endl;
 }
-void Algorithms::relax(size_t verex1, size_t verex2, vector<int> &dist, vector<size_t> &pred, Graph &graph) {
-    if (graph.get_matrix()[verex1][verex2] != 0 && dist[verex1] != INT_MAX && dist[verex1] + graph.get_matrix()[verex1][verex2] < dist[verex2]) {
+/*
+    Utility function to relax edges during the Bellman-Ford algorithm.
+*/
+void Algorithms::relax(size_t verex1, size_t verex2, vector<int> &dist, vector<size_t> &pred, Graph &graph)
+{
+    if (graph.get_matrix()[verex1][verex2] != 0 && dist[verex1] != INT_MAX && dist[verex1] + graph.get_matrix()[verex1][verex2] < dist[verex2])
+    {
         dist[verex2] = dist[verex1] + graph.get_matrix()[verex1][verex2];
         pred[verex2] = verex1; // Update predecessor
     }
 }
+/*
+    This function checks if a graph contains a negative weight cycle
+      using the Bellman-Ford algorithm.
+*/
 bool Algorithms::negativeCycle(Graph &graph)
 {
 

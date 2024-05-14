@@ -23,7 +23,7 @@ TEST_CASE("empty graph")
          {0, 0, 0},
          {0, 0, 0}};
     g.loadGraph(graph);
-    CHECK(ariel::Algorithms::isConnected(g) == 0);
+    CHECK(ariel::Algorithms::isConnected(g) == false);
     CHECK(ariel::Algorithms::isContainsCycle(g) == false);
     CHECK(ariel::Algorithms::shortestPath(g, 0, 2) == "-1");
 
@@ -34,7 +34,7 @@ TEST_CASE("empty graph")
         {0, 0, 0, 0, 0},
         {0, 0, 0, 0, 0}};
     g.loadGraph(graph1);
-    CHECK(ariel::Algorithms::isConnected(g) == 0);
+    CHECK(ariel::Algorithms::isConnected(g) == false);
     CHECK(ariel::Algorithms::isContainsCycle(g) == false);
     CHECK(ariel::Algorithms::shortestPath(g, 0, 2) == "-1");
 
@@ -44,7 +44,7 @@ TEST_CASE("empty graph")
         {0, 0, 0, 0},
         {0, 0, 0, 0}};
     g.loadGraph(graph2);
-    CHECK(ariel::Algorithms::isConnected(g) == 0);
+    CHECK(ariel::Algorithms::isConnected(g) == false);
     CHECK(ariel::Algorithms::isContainsCycle(g) == false);
     CHECK(ariel::Algorithms::shortestPath(g, 0, 2) == "-1");
 }
@@ -56,9 +56,8 @@ TEST_CASE("Test isConnected")
         {1, 0, 1},
         {0, 1, 0}};
     g.loadGraph(graph);
-    CHECK(ariel::Algorithms::isConnected(g) == 1);
+    CHECK(ariel::Algorithms::isConnected(g) == true);
     CHECK(ariel::Algorithms::isContainsCycle(g) == false);
-
     vector<vector<int> > graph2 = {
         {0, 1, 1, 0, 0},
         {1, 0, 1, 0, 0},
@@ -66,7 +65,8 @@ TEST_CASE("Test isConnected")
         {0, 0, 1, 0, 0},
         {0, 0, 0, 0, 0}};
     g.loadGraph(graph2);
-    CHECK(ariel::Algorithms::isConnected(g) == 0);
+    CHECK(ariel::Algorithms::isConnected(g) == false);
+
 }
 
 TEST_CASE("Test shortestPath")

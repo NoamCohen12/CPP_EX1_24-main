@@ -27,7 +27,8 @@ namespace ariel
         int graph_type(vector<vector<int> > &graph);
         int get_type_graph()const;
         Graph getTranspose() const;
-        Graph getClique() const;
+        Graph add_opposite_edges() const;
+       
     };
 }
 #endif
