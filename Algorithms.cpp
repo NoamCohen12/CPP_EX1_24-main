@@ -78,17 +78,17 @@ bool Algorithms::isConnected(Graph graph)
     {
         return bfs((graph.get_matrix()), 0);
     }
-    size_t n = g.getSize();
-    vector<bool> visit_dfs1 = dfs_graph(g);
-    Graph GT = g.getTranspose();
-    // vector<bool> visit_dfs2 = dfs_graph(GT);
-    // for (size_t i = 0; i < n; i++)
-    // {
-    //     if (visit_dfs1[i] == false || visit_dfs2[i] == false)
-    //     {
-    //         return false;
-    //     }
-    // }
+    size_t number_vertixs = graph.getSize();
+    vector<bool> visit_dfs1 = dfs_graph(graph);
+    Graph GTranspose = graph.getTranspose();
+    vector<bool> visit_dfs2 = dfs_graph(GTranspose);
+    for (size_t i = 0; i < number_vertixs; i++)
+    {
+        if (!visit_dfs1[i] || !visit_dfs2[i])
+        {
+            return false;
+        }
+    }
 
     return true;
 }
@@ -347,6 +347,12 @@ string Algorithms::shortestPath(Graph graph, size_t start, size_t end)
     {
         throw invalid_argument("Invalid source or destination vertex");
     }
+
+    if (negativeCycle(graph))
+    {
+        return "-1"; // if there is negative cycle there is not shortest path
+    }
+
     if (start == end)
     {
         return to_string(start);
@@ -511,17 +517,14 @@ string Algorithms::isBipartite(Graph &graph)
     return Two_Color_Division(Clique);
 }
 
-bool Algorithms::bellmanFord_negative_cycle(Graph &g)
+bool Algorithms::bellmanFord_negative_cycle(Graph &graph)
 {
-    size_t n = g.getSize();
+    vector<size_t> cycle;
+    size_t number_vertixs = graph.getSize();
     size_t source = 0;
-    size_t target = n;
-    if (source == target)
-    {
-        return fasle;
-    }
-
-    vector<int> dist(n, INT_MAX);
+    vector<bool> in_path(graph.getSize(), false); // Mark vertices in the current path
+    vector<int> dist(number_vertixs, INT_MAX);
+    vector<size_t> pred(number_vertixs, 0); // Store predecessors for tracing the cycle
     dist[source] = 0;
 
     // Relax all edges |V| - 1 times
@@ -531,30 +534,60 @@ bool Algorithms::bellmanFord_negative_cycle(Graph &g)
         {
             for (size_t k = 0; k < number_vertixs; ++k)
             {
-                if (g.get_matrix()[u][v] != 0 && dist[u] != INT_MAX && dist[u] + g.get_matrix()[u][v] < dist[v])
-                {
-                    dist[v] = dist[u] + g.get_matrix()[u][v];
-                }
+                relax(j, k,  dist,  pred, graph); 
             }
         }
-        
     }
     // Check for negative cycles
     for (size_t j = 0; j < number_vertixs; ++j)
     {
         for (size_t k = 0; k < number_vertixs; ++k)
         {
-            if (g.get_matrix()[u][v] != 0 && dist[u] != INT_MAX && dist[u] + g.get_matrix()[u][v] < dist[v])
+            if (graph.get_matrix()[j][k] != 0 && dist[j] != INT_MAX && dist[j] + graph.get_matrix()[j][k] < dist[k])
             {
-                cout << "Graph contains negative weight cycle" << endl;
-                return false;
+                // Negative cycle detected
+                size_t curr = k;
+                while (!in_path[curr])
+                {
+                    in_path[curr] = true; // Mark the current vertex
+                    curr = pred[curr];
+                }
+
+                vector<size_t> cycle;
+                size_t start = curr;
+                do
+                {
+                    cycle.push_back(curr);
+                    curr = pred[curr];
+                } while (curr != start);
+
+                printNegativeCycle(cycle);
+
+                return true; // Negative cycle found
             }
         }
     }
-    return true;
-}
 
-bool negativeCycle(Graph &g)
+    return false; // No negative cycle found
+}
+void Algorithms::printNegativeCycle(const vector<size_t> &cycle)
 {
-    return bellmanFord_negative_cycle(g);
+    cout << "Graph contains negative weight cycle: ";
+    for (size_t i = cycle.size() - 1; i > 0; --i)
+    {
+        cout << cycle[i] << "->";
+    }
+    cout << cycle[0];
+    cout << "->" << cycle[cycle.size() - 1] << endl;
+}
+void Algorithms::relax(size_t verex1, size_t verex2, vector<int> &dist, vector<size_t> &pred, Graph &graph) {
+    if (graph.get_matrix()[verex1][verex2] != 0 && dist[verex1] != INT_MAX && dist[verex1] + graph.get_matrix()[verex1][verex2] < dist[verex2]) {
+        dist[verex2] = dist[verex1] + graph.get_matrix()[verex1][verex2];
+        pred[verex2] = verex1; // Update predecessor
+    }
+}
+bool Algorithms::negativeCycle(Graph &graph)
+{
+
+    return bellmanFord_negative_cycle(graph);
 }
