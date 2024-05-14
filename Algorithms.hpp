@@ -38,6 +38,7 @@ namespace ariel
         static bool is_cycle_UD(Graph &graph);
 
         static void print_cycle(vector<size_t> &cycle);
+        
 
         static bool isConnected(Graph graph);
 
