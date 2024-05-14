@@ -4,20 +4,20 @@ using namespace ariel;
 
 Graph::Graph(bool isDirected1)
 {
-    this->v = 0;
+    this->num_vertices = 0;
     this->isDirected = isDirected1;
     this->type_graph = 0;
 }
 
 size_t Graph::getSize()const
 {
-    return this->v;
+    return this->num_vertices;
 }
 
 
 void Graph::loadGraph(vector<vector<int> > &graph)
 {
-    this->v = graph.size();
+    this->num_vertices = graph.size();
     this->matrix = graph;
     if (graph.size() != graph[0].size() || graph.empty())
     {
@@ -35,9 +35,9 @@ void Graph::loadGraph(vector<vector<int> > &graph)
 
     // Clear the existing matrix and resize to match the input graph size
     matrix.clear();
-    this->v = graph.size();
+    this->num_vertices = graph.size();
     this->type_graph = graph_type(graph);
-    matrix.resize(v, vector<int>(v, 0));
+    matrix.resize(num_vertices, vector<int>(num_vertices, 0));
     for (size_t i = 0; i < graph.size(); i++)
     {
         for (size_t j = 0; j < graph.size(); j++)
@@ -49,13 +49,26 @@ void Graph::loadGraph(vector<vector<int> > &graph)
 
 void Graph::printGraph()
 {
-    for (size_t i = 0; i < v; i++)
+  int num_edges = 0;
+    int vertices = this->num_vertices;
+    for (size_t i = 0; i < vertices; i++)
     {
-        for (size_t j = 0; j < v; j++)
+        // only count the upper triangle of the matrix
+        for (size_t j = 0; j < vertices; j++)
         {
-            cout << matrix[i][j] << " "; // Print matrix element followed by a space
+            if (this->matrix[i][j] != 0)
+            {
+                num_edges++;
+            }
         }
-        cout << endl; // Move to the next line after printing a row
+    }
+    if (this->isDirected)
+    {
+        cout << "The graph is directed. V(G) = " << vertices << ", E(G) = " << num_edges << endl;
+    }
+    else
+    {
+        cout << "The graph is undirected. V(G) = " << vertices << " E(G) = " << (num_edges / 2) << endl;
     }
 }
 
@@ -78,10 +91,10 @@ int Graph::get_type_graph() const
 
 Graph Graph::getTranspose() const {
     Graph gTranspose(true);
-    size_t number_vertixs = this->v;
-    vector<vector<int>> transpose(number_vertixs, vector<int>(number_vertixs, 0));
-    for (size_t i = 0; i < number_vertixs; ++i) {
-        for (size_t j = 0; j < number_vertixs; ++j) {
+    size_t num_vertices = this->num_vertices;
+    vector<vector<int>> transpose(num_vertices, vector<int>(num_vertices, 0));
+    for (size_t i = 0; i < num_vertices; ++i) {
+        for (size_t j = 0; j < num_vertices; ++j) {
             transpose[j][i] = this->matrix[i][j];
         }
     }
@@ -91,10 +104,10 @@ Graph Graph::getTranspose() const {
 
 Graph Graph::getClique() const {
     Graph gClique(true);
-    size_t number_vertixs = this->v;
-    vector<vector<int>> Clique(number_vertixs, vector<int>(number_vertixs, 0));
-    for (size_t i = 0; i < number_vertixs; ++i) {
-        for (size_t j = 0; j < number_vertixs; ++j) {
+    size_t num_vertices = this->num_vertices;
+    vector<vector<int>> Clique(num_vertices, vector<int>(num_vertices, 0));
+    for (size_t i = 0; i < num_vertices; ++i) {
+        for (size_t j = 0; j < num_vertices; ++j) {
             Clique[j][i] = this->matrix[j][i];
             if (Clique[j][i] > 0 && Clique[i][j] == 0)
             {

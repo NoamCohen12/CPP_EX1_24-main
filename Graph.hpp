@@ -13,7 +13,7 @@ namespace ariel
     {
     private:
         vector<vector<int> > matrix; // adjacency list
-        size_t v;                    // number of vertixs
+        size_t num_vertices;                    // number of vertixs
         bool isDirected;
         int type_graph;              
 
