@@ -48,7 +48,7 @@ Directed case:
 3.Use BFS in the two time on Transpose graph
 check if both return true isConnected return true
 */
-bool Algorithms::isConnected(Graph graph)
+bool Algorithms::isConnected(Graph &graph)
 {
     size_t number_vertices = graph.getSize();
     if (number_vertices == 0 || number_vertices == 1)
@@ -272,7 +272,7 @@ string Algorithms::bellmanFord(const Graph &graph, size_t source, size_t target)
         - For graphs with negative edge weights, it uses the Bellman-Ford algorithm.
 */
 
-string Algorithms::shortestPath(Graph graph, size_t start, size_t end)
+string Algorithms::shortestPath(Graph &graph, size_t start, size_t end)
 {
     if (start >= graph.get_matrix().size() || start < 0 || end >= graph.get_matrix().size() || end < 0)
     {
@@ -304,6 +304,11 @@ string Algorithms::shortestPath(Graph graph, size_t start, size_t end)
 
     return "-1";
 }
+/* This function performs a depth-first search (DFS) to detect cycles in a directed graph.
+   It marks vertices as visited and tracks the current path to detect cycles.
+   If a vertex is encountered that is already in the current path, a cycle is detected and the function returns true.
+   Otherwise, it backtracks and removes vertices from the current path as it explores the graph. 
+   */
 
 bool Algorithms::dfs_D_cycle_detection(Graph &graph, size_t source, vector<bool> &visited, vector<bool> &in_recursion_stack, vector<size_t> &path)
 {
@@ -313,8 +318,8 @@ bool Algorithms::dfs_D_cycle_detection(Graph &graph, size_t source, vector<bool>
 
     for (size_t neighbor = 0; neighbor < graph.get_matrix()[source].size(); ++neighbor)
     {
-        if (graph.get_matrix()[source][neighbor] != 0)
-        { // Check if there's an edge
+        if (graph.get_matrix()[source][neighbor] != 0)// Check if there's an edge
+        { 
             if (!visited[neighbor])
             {
                 if (dfs_D_cycle_detection(graph, neighbor, visited, in_recursion_stack, path))
@@ -334,11 +339,10 @@ bool Algorithms::dfs_D_cycle_detection(Graph &graph, size_t source, vector<bool>
 }
 /*
     This function implements a DFS-based cycle detection algorithm for directed graphs.
-    //TODOOOO
 */
 bool Algorithms::is_cycle_D(Graph &graph)
 {
-    size_t number_vertices = graph.get_matrix().size();
+    size_t number_vertices = graph.getSize();
     vector<bool> visited(number_vertices, false);
     vector<bool> in_recursion_stack(number_vertices, false);
     vector<size_t> path;
@@ -431,8 +435,23 @@ void Algorithms::print_cycle(vector<size_t> &cycle)
     cout << endl;
 }
 
+
+/*
+ This function checks whether the given graph contains a cycle.
+ If the graph is empty or has only one vertex, it cannot contain a cycle, so the function returns false.
+ For directed graphs, it calls the is_cycle_D function to check for cycles.
+ For undirected graphs, it calls the is_cycle_UD function to check for cycles.
+
+I assume a cycle in this directed graph :
+ v->u , u->v this cycle!
+*/
 bool Algorithms::isContainsCycle(Graph &graph)
 {
+     if (graph.getSize() == 0||graph.getSize() == 1)
+    {
+        return false;
+    }
+
     if (graph.isDirectedG())
     {
         return (is_cycle_D(graph));

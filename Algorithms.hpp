@@ -21,13 +21,13 @@ namespace ariel
     public:
         // functions for isConnected function
         static bool bfs(vector<vector<int> > adj, int start);
-        static bool isConnected(Graph graph);
+        static bool isConnected(Graph &graph);
 
         // functions for shortestPath function
         static string find_path_bfs(Graph &graph, size_t start, size_t end);
         static string dijkstra(const Graph &graph, size_t source, size_t target);
         static string bellmanFord(const Graph &graph, size_t source, size_t target);
-        static string shortestPath(Graph graph, size_t start, size_t end);
+        static string shortestPath(Graph &graph, size_t start, size_t end);
 
         // functions for isContainsCycle function
         static bool dfs_D_cycle_detection(Graph &graph, size_t source, vector<bool> &visited, vector<bool> &in_recursion_stack, vector<size_t> &path);
