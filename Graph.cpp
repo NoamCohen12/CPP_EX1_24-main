@@ -115,16 +115,24 @@ Graph Graph::add_opposite_edges() const
     {
         for (size_t j = 0; j < num_vertices; ++j)
         {
-            new_matrix[j][i] = this->matrix[j][i];
-            if (new_matrix[j][i] > 0 && new_matrix[i][j] == 0)
+            if ( this->matrix[i][j] != 0 &&  this->matrix[j][i] == 0)
             {
-                new_matrix[i][j] = this->matrix[j][i];
+                new_matrix[i][j] = this->matrix[i][j];
+                 new_matrix[j][i] = this->matrix[i][j];
+
             }
+             if ( this->matrix[i][j] == 0 &&  this->matrix[j][i] != 0)
+            {
+                new_matrix[j][i] = this->matrix[j][i];
+                new_matrix[i][j] = this->matrix[j][i];
+
+            }
+
+
         }
     }
     fix_graph.loadGraph(new_matrix); // Assign the new_matrix to fix_graph
     
-
     return fix_graph;
 }
 

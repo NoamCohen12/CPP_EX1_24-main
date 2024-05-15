@@ -51,7 +51,7 @@ check if both return true isConnected return true
 bool Algorithms::isConnected(Graph &graph)
 {
     size_t number_vertices = graph.getSize();
-    if (number_vertices == 0 || number_vertices == 1)//assuming
+    if (number_vertices == 0 || number_vertices == 1) // assuming
     {
         return true;
     }
@@ -467,43 +467,52 @@ string Algorithms::Two_Color_Division(Graph &graph)
 {
     vector<int> Group_A;
     vector<int> Group_B;
-    unordered_map<int, int> color; // Map to store colors of nodes
+    vector<int> color (graph.getSize(), -1);
     queue<int> Queue;
 
     // Start BFS traversal from each unvisited node
-    for (int i = 0; i < (int)graph.getSize(); ++i)
+    for (size_t i = 0; i < graph.getSize(); i++)
     {
-        if (color.find(i) == color.end())
+        if (color[i] == -1)
         { // Unvisited node
+            cout << "Starting BFS from node " << i << endl;
+
             Queue.push(i);
             color[i] = 0; // Assign color 0 to start with
 
             while (!Queue.empty())
             {
-                int curr = Queue.front();
+                size_t curr =(size_t) Queue.front();
                 Queue.pop();
+                cout << "Visiting node " << curr << endl;
                 if (color[curr] == 0)
                 {
+                    cout << "Assigning node " << curr << " to Group_A" << endl;
                     Group_A.push_back(curr);
                 }
-                else
+                else if(color[curr]!=-1)
                 {
+                    cout << "Assigning node " << curr << " to Group_B" << endl;
                     Group_B.push_back(curr);
                 }
                 // Traverse neighbors of curr
 
-                for (int k = 0; k < graph.get_matrix()[(size_t)curr].size(); k++)
+                for (size_t k = 0; k < graph.get_matrix()[(size_t)curr].size(); k++)
                 {
                     if (graph.get_matrix()[(size_t)curr][(size_t)k] != 0)
                     {
-                        if (color.find(k) == color.end())
-                        {                               // Unvisited neighbor
+                        cout << "Checking edge between nodes " << curr << " and " << k << endl;
+                        if (color[k]==-1)
+                        { // Unvisited neighbor
+                            cout << "Neighbor " << k << " is unvisited. Assigning color." << endl;
                             color[k] = 1 - color[curr]; // Assign opposite color
+
                             Queue.push(k);
                         }
                         else if (color[k] == color[curr])
                         {
                             // If neighbor has same color as curr, not bipartite
+                            cout << "Neighbor " << k << " has the same color as node " << curr << ". Not bipartite." << endl;
                             return "-1";
                         }
                     }
@@ -518,7 +527,6 @@ string Algorithms::Two_Color_Division(Graph &graph)
 
     return "The graph is bipartite: A=" + setA + ", B=" + setB;
 }
-
 string Algorithms::constructSetString(const vector<int> &Group)
 {
     string setStr = "{";
@@ -547,11 +555,11 @@ string Algorithms::constructSetString(const vector<int> &Group)
 */
 string Algorithms::isBipartite(Graph &graph)
 {
-    if (graph.getSize()==0)
+    if (graph.getSize() == 0)
     {
-        return "-1";
+        return "-1"; // assume
     }
-    
+
     if (!graph.isDirectedG())
     {
         return Two_Color_Division(graph);
