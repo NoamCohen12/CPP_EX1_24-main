@@ -9,23 +9,26 @@ Graph::Graph(bool isDirected1)
     this->type_graph = 0;
 }
 
-size_t Graph::getSize()const
+size_t Graph::getSize() const
 {
     return this->num_vertices;
 }
-
 
 void Graph::loadGraph(vector<vector<int> > &graph)
 {
     this->num_vertices = graph.size();
     this->matrix = graph;
-    if (graph.size() != graph[0].size() || graph.empty())
+    for (size_t i = 0; i < num_vertices; i++)
     {
+       if( graph[i].size() != num_vertices){
+        cout<<graph[i].size()<<endl;
+        cout<<num_vertices<<endl;
 
         throw invalid_argument("your matrix should be squer");
+       }
     }
 
-    for (size_t i = 0; i < matrix.size(); ++i)
+    for (size_t i = 0; i < matrix.size(); i++)
     {
         if (matrix[i][i] != 0)
         {
@@ -47,9 +50,9 @@ void Graph::loadGraph(vector<vector<int> > &graph)
     }
 }
 
-void Graph::printGraph()
+void Graph::printGraph() const
 {
-  int num_edges = 0;
+    int num_edges = 0;
     int vertices = this->num_vertices;
     for (size_t i = 0; i < vertices; i++)
     {
@@ -87,14 +90,15 @@ int Graph::get_type_graph() const
     return this->type_graph;
 }
 
-
-
-Graph Graph::getTranspose() const {
+Graph Graph::getTranspose() const
+{
     Graph gTranspose(true);
     size_t num_vertices = this->num_vertices;
-    vector<vector<int>> transpose(num_vertices, vector<int>(num_vertices, 0));
-    for (size_t i = 0; i < num_vertices; ++i) {
-        for (size_t j = 0; j < num_vertices; ++j) {
+    vector<vector<int> > transpose(num_vertices, vector<int>(num_vertices, 0));
+    for (size_t i = 0; i < num_vertices; ++i)
+    {
+        for (size_t j = 0; j < num_vertices; ++j)
+        {
             transpose[j][i] = this->matrix[i][j];
         }
     }
@@ -102,28 +106,27 @@ Graph Graph::getTranspose() const {
     return gTranspose;
 }
 
-Graph Graph::add_opposite_edges() const {
+Graph Graph::add_opposite_edges() const
+{
     Graph fix_graph(true);
     size_t num_vertices = this->num_vertices;
-    vector<vector<int>> new_matrix(num_vertices, vector<int>(num_vertices, 0));
-    for (size_t i = 0; i < num_vertices; ++i) {
-        for (size_t j = 0; j < num_vertices; ++j) {
+    vector<vector<int> > new_matrix(num_vertices, vector<int>(num_vertices, 0));
+    for (size_t i = 0; i < num_vertices; ++i)
+    {
+        for (size_t j = 0; j < num_vertices; ++j)
+        {
             new_matrix[j][i] = this->matrix[j][i];
             if (new_matrix[j][i] > 0 && new_matrix[i][j] == 0)
             {
-               new_matrix[i][j] = this->matrix[j][i];
+                new_matrix[i][j] = this->matrix[j][i];
             }
         }
     }
     fix_graph.loadGraph(new_matrix); // Assign the new_matrix to fix_graph
+    
+
     return fix_graph;
 }
-
-
-
-
-
-
 
 int Graph::graph_type(vector<vector<int> > &graph)
 {
@@ -136,7 +139,7 @@ int Graph::graph_type(vector<vector<int> > &graph)
             {
                 return negative_edges;
             }
-             if (matrix[i][j] > 0)
+            if (matrix[i][j] > 0)
             {
                 type = positive_edges;
             }

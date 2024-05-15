@@ -51,7 +51,7 @@ check if both return true isConnected return true
 bool Algorithms::isConnected(Graph &graph)
 {
     size_t number_vertices = graph.getSize();
-    if (number_vertices == 0 || number_vertices == 1)
+    if (number_vertices == 0 || number_vertices == 1)//assuming
     {
         return true;
     }
@@ -66,7 +66,7 @@ bool Algorithms::isConnected(Graph &graph)
         bool One_Direction = bfs(graph.get_matrix(), 0);
         Graph GTranspose = graph.getTranspose();
         bool Second_Direction = bfs(GTranspose.get_matrix(), 0);
-        return One_Direction || Second_Direction;
+        return One_Direction && Second_Direction;
     }
 }
 
@@ -262,7 +262,7 @@ string Algorithms::bellmanFord(const Graph &graph, size_t source, size_t target)
     return shortest_path;
 }
 /*
-    This function calculates the shortest path between two vertices in a graph. 
+    This function calculates the shortest path between two vertices in a graph.
     It handles three cases:
     1. If the graph is empty or either the start or end vertex is out of range, it throws an invalid_argument exception.
     2. If the graph contains a negative weight cycle, it returns "-1" to indicate that there is no shortest path.
@@ -307,7 +307,7 @@ string Algorithms::shortestPath(Graph &graph, size_t start, size_t end)
 /* This function performs a depth-first search (DFS) to detect cycles in a directed graph.
    It marks vertices as visited and tracks the current path to detect cycles.
    If a vertex is encountered that is already in the current path, a cycle is detected and the function returns true.
-   Otherwise, it backtracks and removes vertices from the current path as it explores the graph. 
+   Otherwise, it backtracks and removes vertices from the current path as it explores the graph.
    */
 
 bool Algorithms::dfs_D_cycle_detection(Graph &graph, size_t source, vector<bool> &visited, vector<bool> &in_recursion_stack, vector<size_t> &path)
@@ -318,8 +318,8 @@ bool Algorithms::dfs_D_cycle_detection(Graph &graph, size_t source, vector<bool>
 
     for (size_t neighbor = 0; neighbor < graph.get_matrix()[source].size(); ++neighbor)
     {
-        if (graph.get_matrix()[source][neighbor] != 0)// Check if there's an edge
-        { 
+        if (graph.get_matrix()[source][neighbor] != 0) // Check if there's an edge
+        {
             if (!visited[neighbor])
             {
                 if (dfs_D_cycle_detection(graph, neighbor, visited, in_recursion_stack, path))
@@ -435,19 +435,20 @@ void Algorithms::print_cycle(vector<size_t> &cycle)
     cout << endl;
 }
 
-
 /*
  This function checks whether the given graph contains a cycle.
  If the graph is empty or has only one vertex, it cannot contain a cycle, so the function returns false.
  For directed graphs, it calls the is_cycle_D function to check for cycles.
  For undirected graphs, it calls the is_cycle_UD function to check for cycles.
 
-I assume a cycle in this directed graph :
+I assume a cycle in this directed graph:
  v->u , u->v this cycle!
+I assume one vertix is not cycle!
+
 */
 bool Algorithms::isContainsCycle(Graph &graph)
 {
-     if (graph.getSize() == 0||graph.getSize() == 1)
+    if (graph.getSize() == 0 || graph.getSize() == 1) // asume that one vertix is not cycle.
     {
         return false;
     }
@@ -503,7 +504,7 @@ string Algorithms::Two_Color_Division(Graph &graph)
                         else if (color[k] == color[curr])
                         {
                             // If neighbor has same color as curr, not bipartite
-                            return "0";
+                            return "-1";
                         }
                     }
                 }
@@ -546,6 +547,11 @@ string Algorithms::constructSetString(const vector<int> &Group)
 */
 string Algorithms::isBipartite(Graph &graph)
 {
+    if (graph.getSize()==0)
+    {
+        return "-1";
+    }
+    
     if (!graph.isDirectedG())
     {
         return Two_Color_Division(graph);
@@ -640,6 +646,10 @@ void Algorithms::relax(size_t verex1, size_t verex2, vector<int> &dist, vector<s
 */
 bool Algorithms::negativeCycle(Graph &graph)
 {
+    if (graph.getSize() == 0)
+    {
+        return false;
+    }
 
     return bellmanFord_negative_cycle(graph);
 }

@@ -20,7 +20,7 @@ namespace ariel
     public:
         Graph( bool isDirected);
         void loadGraph(vector<vector<int> > &graph);
-        void printGraph();
+        void printGraph()const;
         size_t getSize()const; 
         vector<vector<int> > get_matrix()const;
         bool isDirectedG()const;
