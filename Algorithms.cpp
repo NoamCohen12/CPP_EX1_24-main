@@ -467,7 +467,7 @@ string Algorithms::Two_Color_Division(Graph &graph)
 {
     vector<int> Group_A;
     vector<int> Group_B;
-    vector<int> color (graph.getSize(), -1);
+    vector<int> color(graph.getSize(), -1);
     queue<int> Queue;
 
     // Start BFS traversal from each unvisited node
@@ -482,7 +482,7 @@ string Algorithms::Two_Color_Division(Graph &graph)
 
             while (!Queue.empty())
             {
-                size_t curr =(size_t) Queue.front();
+                size_t curr = (size_t)Queue.front();
                 Queue.pop();
                 cout << "Visiting node " << curr << endl;
                 if (color[curr] == 0)
@@ -490,7 +490,7 @@ string Algorithms::Two_Color_Division(Graph &graph)
                     cout << "Assigning node " << curr << " to Group_A" << endl;
                     Group_A.push_back(curr);
                 }
-                else if(color[curr]!=-1)
+                else if (color[curr] != -1)
                 {
                     cout << "Assigning node " << curr << " to Group_B" << endl;
                     Group_B.push_back(curr);
@@ -502,7 +502,7 @@ string Algorithms::Two_Color_Division(Graph &graph)
                     if (graph.get_matrix()[(size_t)curr][(size_t)k] != 0)
                     {
                         cout << "Checking edge between nodes " << curr << " and " << k << endl;
-                        if (color[k]==-1)
+                        if (color[k] == -1)
                         { // Unvisited neighbor
                             cout << "Neighbor " << k << " is unvisited. Assigning color." << endl;
                             color[k] = 1 - color[curr]; // Assign opposite color
@@ -546,6 +546,10 @@ string Algorithms::constructSetString(const vector<int> &Group)
     This function checks if a graph is bipartite using a two-coloring algorithm.
     Undirected case:
     checks if a graph is two-coloring.
+
+
+
+    the algoritem work just on undirected graph so We will make the directed graph undirected
 
     Directed case:
     1.add opposite edges

@@ -1,29 +1,45 @@
-# מטלה 1 - גרפים (Classes and Namespaces)
+# Project Title
 
-המטרה שלכם במטלה הזאת היא ליצור מחלקה שמייצגת גרף ולממש אלגוריתמים על הגרפים (זה הזמן להזכר בקורס אלגוריתמים 1).
+Description of what the project does.
 
-במטלה הזאת הייצוג של הגרף שלכם יתבצע בעזרת מטריצת שכנויות - https://he.wikipedia.org/wiki/%D7%9E%D7%98%D7%A8%D7%99%D7%A6%D7%AA_%D7%A9%D7%9B%D7%A0%D7%95%D7%AA.
+## Table of Contents
 
-הגרף יכול להיות גרף מכוון ולא מכוון וגם גרף ממושקל. מטריצת השכנויות חייבת להיות מטריצה ריבועית.
+- [Installation](#installation)
+- [Usage](#usage)
+- [Configuration](#configuration)
+- [Contributing](#contributing)
+- [License](#license)
+- [Credits](#credits)
+- [Contact Information](#contact-information)
 
-עליכם לכתוב את הקבצים הבאים:
+## Installation
 
-```
-Graph.cpp
-Algorithms.cpp
-```
+Instructions for installing the project.
 
-הקובץ `Graph.cpp` מכיל מחלקה המייצגת גרף.
-המחלקה מכילה את הפעולות `loadGraph` המקבלת מטריצת שכנויות וטוענת אותה לתוך הגרף ו-`printGraph` שמדפיסה את הייצוג של הגרף (הפורמט לבחירתכם, ראו דוגמה ב-`Demo.cpp`).
+## Usage
 
-הקובץ `Algorithms.cpp` מכיל מימושים לאלגוריתמים על גרפים. ביניהם:
+Instructions for using the project. Include examples and code snippets.
 
-- `isConnected(g)` - האלגוריתם מקבל גרף ומחזיר 1 אם הגרף קשיר (אחרת מחזיר 0).
-- `shortestPath(g,start,end)` - האלגוריתם מקבל גרף, קודקוד התחלה וקודקוד סיום ומחזיר את המסלול הקל ביותר (במקרה שהגרף לא ממושקל - הקצר ביותר) בין שני הקודקודים. במידה ואין מסלול כזה, האלגוריתם יחזיר -1.
-- `isContainsCycle(g)` - האלגוריתם מקבל גרף ומדפיס מעגל כלשהו. אם לא קיים מעגל בגרף, האלגוריתם יחזיר 0.
-- `isBipartite(g)` - האלגוריתם מקבל גרף ומחזיר את החלוקה של הגרף לגרף דו-צדדי. אם אי אפשר לחלק את הגרף, האלגוריתם יחזיר 0.
-- `negativeCycle(g)` - האלגוריתם מקבל גרף ומוצא מעגל שלילי (כלומר מעגל שסכום המשקלים של הצלעות שלילי). אם לא קיים מעגל כזה, האלגוריתם ידפיס שלא קיים מעגל שלילי.
+## Configuration
 
-הקובץ `Demo.cpp` מכיל דוגמאות של קלטים ופלטים.
-עליכם לכתוב בתחילת כל קובץ את מספר תעודת הזהות שלכם ואת המייל. כמו כן, בנוסף לקבצים של המטלה אתם נדרשים להגיש גם קובץ README המתאר את אופן המימוש ואת החלוקה שביצעתם בקוד (סוג של מדריך משתמש). אי עמידה בהנחיות תגרור הפחתה בציון. בהצלחה!
-  
+Explanation of any configuration settings or environment variables required.
+
+## Contributing
+
+Guidelines for contributing to the project. Include information on reporting bugs, suggesting improvements, and submitting pull requests.
+
+## License
+
+Specify the project's license.
+
+## Credits
+
+Give credit to any individuals or organizations that contributed to the project.
+
+## Contact Information
+
+Provide contact information for users to reach out with questions or feedback.
+
+## Main Function
+
+The main function of this project is located in the file `main.cpp`. It serves as the entry point of the program and demonstrates how to use the algorithms provided in the `Algorithms` class. To run the program, compile `main.cpp` along with other necessary files and execute the resulting binary. Ensure that you have included the necessary header files and linked against the appropriate libraries.

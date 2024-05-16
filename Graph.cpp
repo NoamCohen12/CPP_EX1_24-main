@@ -127,6 +127,12 @@ Graph Graph::add_opposite_edges() const
                 new_matrix[i][j] = this->matrix[j][i];
 
             }
+            if (this->matrix[i][j] == 0 &&  this->matrix[j][i] == 0)
+            {
+                new_matrix[j][i] = 0;
+                new_matrix[i][j] = 0;
+            }
+            
 
 
         }
