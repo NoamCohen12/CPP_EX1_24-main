@@ -1,23 +1,34 @@
- # CPP_EX1_24
+# CPP_EX1_24
 
 The project implements in C++   
 and deals with graphs and various algorithms on them
-The graph is represented as a 2D adjacency matrix.
 
-My code refers to 2 cases:
-1.directed graph
-2.undirected graph
-
-also refers to 3 various graphs:
-1.without weight.
-2.with positive weight.
-3.with negative weight.
 
 ## Author
 Noam Cohen 
 
 Email: noam12345002@gmail.com
  
+
+
+## Graph
+The graph is represented as a 2D adjacency matrix.
+
+My code refers to 2 graphs types:
+
+1.directed graph
+
+2.undirected graph
+
+also refers to 3 casses:
+
+1.without weight.
+
+2.with positive weight.
+
+3.with negative weight.
+
+
 
 ## Main Classes
 
