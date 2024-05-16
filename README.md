@@ -1,4 +1,4 @@
- CPP_EX1_24
+ # CPP_EX1_24
 
 The project implements in C++   
 and deals with graphs and various algorithms on them
@@ -13,7 +13,7 @@ also refers to 3 various graphs:
 2.with positive weight.
 3.with negative weight.
 
-# Author
+## Author
 Noam Cohen 
 Email: noam12345002@gmail.com
  
@@ -26,7 +26,7 @@ Email: noam12345002@gmail.com
 
 
 
-Graph.cpp:
+### Graph.cpp:
         
 **loadGraph**: Loads a graph from a provided 2D vector representing its adjacency matrix.
 
