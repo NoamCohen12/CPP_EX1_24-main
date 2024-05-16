@@ -82,7 +82,11 @@ and "make valgrind" To check for memory leaks.
 
 ## Main Algorithms
 -bool isConnected(Graph &graph)
+
 -string shortestPath(Graph &graph, size_t start, size_t end)
+
 -bool isContainsCycle(Graph &graph);
+
 -string isBipartite(Graph &graph);
+
 -bool negativeCycle(Graph &graph);
