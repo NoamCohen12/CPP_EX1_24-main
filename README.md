@@ -1,45 +1,46 @@
-# Project Title
+# CPP_EX1_24
 
-Description of what the project does.
+The project implements in C++ and deals with graphs and various algorithms on them. The graph is represented as a 2D adjacency matrix.
 
-## Table of Contents
+## Author
+Noam Cohen  
+Email: noam12345002@gmail.com
 
-- [Installation](#installation)
-- [Usage](#usage)
-- [Configuration](#configuration)
-- [Contributing](#contributing)
-- [License](#license)
-- [Credits](#credits)
-- [Contact Information](#contact-information)
+## Main Classes
+1. **Graph.cpp**
+2. **Alogrithms.cpp**
 
-## Installation
+**Graph.cpp:**
 
-Instructions for installing the project.
+- **loadGraph:** Loads a graph from a provided 2D vector representing its adjacency matrix.
+- **printGraph:** Prints the contents of the graph.
+- **graph_type:** Determines the type of the graph (e.g., directed, undirected) based on its adjacency matrix.
+- **getSize:** Returns the number of vertices in the graph.
+- **get_matrix:** Returns the adjacency matrix of the graph.
+- **isDirectedG:** Checks if the graph is directed or not.
+- **get_type_graph:** Gets the type of the graph.
+- **getTranspose:** Returns the transpose of the graph.
+- **add_opposite_edges:** Adds opposite edges to the graph, effectively converting it into an undirected graph.
 
-## Usage
+**Alogrithms.cpp:**
 
-Instructions for using the project. Include examples and code snippets.
+- **isConnected:** This function checks whether a graph is connected. For undirected graphs, it uses BFS (breadth-first search) to traverse the graph and determine if all vertices are reachable from each other. For directed graphs, it checks connectivity in both directions by using BFS on the original graph and its transpose by "getTranspose".
+- **shortestPath:** Calculates the shortest path between two vertices in a graph. It handles different types of graphs and edge weights. Depending on the type of graph (whether it's undirected, weighted, etc.):
+  - BFS (for unweighted graphs).
+  - Dijkstra's algorithm (for graphs with positive edge weights).
+  - Bellman-Ford algorithm (for graphs with negative edge weights).
+- **isContainsCycle:** Determines if a graph contains any cycle. It delegates the cycle detection to specialized functions depending on whether the graph is directed or undirected. If a cycle is found, the function returns true; otherwise, it returns false.
+- **isBipartite:** Checks if a graph is bipartite, meaning its vertices can be divided into two disjoint sets such that no two vertices within the same set are adjacent. It applies a two-coloring algorithm based on BFS to determine if such a division is possible. Depending on the graph's type:
+  - Directed graph: Add opposite edges and work with a two-coloring algorithm based on BFS.
+  - Undirected graph: Work with a two-coloring algorithm based on BFS.
+- **negativeCycle:** Determines if a graph contains a negative weight cycle. It applies the Bellman-Ford algorithm, which is capable of detecting negative cycles. If a negative cycle is found, the function returns true; otherwise, it returns false.
 
-## Configuration
+## Tests
+My code was checked with many tests with the "make test" command. Also checked with "make tidy" for Correct design of code in C++ and "make valgrind" To check for memory leaks.
 
-Explanation of any configuration settings or environment variables required.
-
-## Contributing
-
-Guidelines for contributing to the project. Include information on reporting bugs, suggesting improvements, and submitting pull requests.
-
-## License
-
-Specify the project's license.
-
-## Credits
-
-Give credit to any individuals or organizations that contributed to the project.
-
-## Contact Information
-
-Provide contact information for users to reach out with questions or feedback.
-
-## Main Function
-
-The main function of this project is located in the file `main.cpp`. It serves as the entry point of the program and demonstrates how to use the algorithms provided in the `Algorithms` class. To run the program, compile `main.cpp` along with other necessary files and execute the resulting binary. Ensure that you have included the necessary header files and linked against the appropriate libraries.
+## Main Algorithms
+- **bool isConnected(Graph &graph)**
+- **string shortestPath(Graph &graph, size_t start, size_t end)**
+- **bool isContainsCycle(Graph &graph);**
+- **string isBipartite(Graph &graph);**
+- **bool negativeCycle(Graph &graph);**

@@ -1,9 +1,9 @@
 #include "Algorithms.hpp"
 using namespace ariel;
 /*
-Implementation of the bfs algorithm that helps to know if we have visited all the vertices
+Implementation of the BFS algorithm that helps to know if we have visited all the vertices
 */
-bool Algorithms::bfs(vector<vector<int> > matrix, int start_node)
+bool Algorithms::BFS(vector<vector<int> > matrix, int start_node)
 {
     vector<bool> visited(matrix.size(), false);
 
@@ -58,14 +58,14 @@ bool Algorithms::isConnected(Graph &graph)
 
     else if (!graph.isDirectedG())
     {
-        return bfs(graph.get_matrix(), 0);
+        return BFS(graph.get_matrix(), 0);
     }
 
     else
     {
-        bool One_Direction = bfs(graph.get_matrix(), 0);
+        bool One_Direction = BFS(graph.get_matrix(), 0);
         Graph GTranspose = graph.getTranspose();
-        bool Second_Direction = bfs(GTranspose.get_matrix(), 0);
+        bool Second_Direction = BFS(GTranspose.get_matrix(), 0);
         return One_Direction && Second_Direction;
     }
 }

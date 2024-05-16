@@ -13,22 +13,27 @@ namespace ariel
     {
     private:
         vector<vector<int> > matrix; // adjacency list
-        size_t num_vertices;                    // number of vertixs
+        size_t num_vertices;         // number of vertixs
         bool isDirected;
-        int type_graph;              
+        int type_graph;
 
     public:
-        Graph( bool isDirected);
+        // main function
+        Graph(bool isDirected);
         void loadGraph(vector<vector<int> > &graph);
-        void printGraph()const;
-        size_t getSize()const; 
-        vector<vector<int> > get_matrix()const;
-        bool isDirectedG()const;
+        void printGraph() const;
+        // help function
         int graph_type(vector<vector<int> > &graph);
-        int get_type_graph()const;
+
+        // gets
+        size_t getSize() const;
+        vector<vector<int> > get_matrix() const;
+        bool isDirectedG() const;
+        int get_type_graph() const;
+
+        // creation functions
         Graph getTranspose() const;
         Graph add_opposite_edges() const;
-       
     };
 }
 #endif
